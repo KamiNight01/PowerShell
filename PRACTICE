@@ -1,0 +1,211 @@
+ACTIVITY 1
+<#1.Ensure that you have the latest copy of help by updating your help system.
+
+
+Update-help -Force -ErrorAction SilentlyContinue 
+
+#2.Which cmdlets deal with the viewing/manipulating of processes?
+
+Get-Command *process                                                                                                                                           
+Function        Get-AppvVirtualProcess                             1.0.0.0    AppvClient                                                                                                                                         
+Function        Start-AppvVirtualProcess                           1.0.0.0    AppvClient                                                                                                                                         
+Cmdlet          Debug-Process                                      3.1.0.0    Microsoft.PowerShell.Management                                                                                                                    
+Cmdlet          Enter-PSHostProcess                                3.0.0.0    Microsoft.PowerShell.Core                                                                                                                          
+Cmdlet          Exit-PSHostProcess                                 3.0.0.0    Microsoft.PowerShell.Core                                                                                                                          
+Cmdlet          Get-Process                                        3.1.0.0    Microsoft.PowerShell.Management                                                                                                                    
+Cmdlet          Start-Process                                      3.1.0.0    Microsoft.PowerShell.Management                                                                                                                    
+Cmdlet          Stop-Process                                       3.1.0.0    Microsoft.PowerShell.Management                                                                                                                    
+Cmdlet          Wait-Process                                       3.1.0.0    Microsoft.PowerShell.Management 
+
+
+#3.Display a list of services installed on your local computer.
+
+
+Get-Service , get-wmiobject
+
+
+#4.What cmdlets are used to write or output objects or text to the screen?
+
+
+write-host echo , 
+
+
+#5.What cmdlets can be used to create, modify, list, and delete variables?
+
+get-variable , Set-Variable  get-childitem variable:* ,  Remove-Variable
+
+
+#6.What cmdlet can be used, other than Get-Help, to find and list other cmdlets?
+
+get-command
+
+
+#7.Find the cmdlet that is used to prompt the user for input.
+
+read-host
+
+#>
+_____________________________________________________________________________________________________________________________
+ACTIVITY 2 
+<#Display a list of running processes.
+
+get-process , ps ,get-wmiobject
+
+Display a list of all running processes that start with the letter "s".
+
+ get-process -name s*
+
+Find the cmdlet and its purpose for the following aliases:
+
+
+gal
+
+--$alias:gal
+Get-Alias
+
+dir
+
+$alias:dir
+Get-ChildItem
+
+echo
+
+ $alias:echo
+Write-Output
+
+?       get-alias -name ?
+
+ ? -> Where-Object
+%
+
+ % -> ForEach-Object  
+
+ft
+
+$alias:ft
+Format-Table
+
+
+
+Display a list of Windows Firewall Rules.
+
+Get-NetFirewallRule
+
+
+Create a new alias called "gh" for the cmdlet "Get-Help"
+
+Set-Alias gh Get-Help
+#>
+_____________________________________________________________________________________________________________________________
+ACTIVITY 3:
+<#
+1.Create a variable called "var1" that holds a random number between 25-50.
+
+$var1 = (get-random -Maximum 50 -Minimum 25)
+
+2.Create a variable called "var2" that holds a random number between 1-10.
+
+$var2 = (get-random -Maximum 10 -Minimum 1)
+
+3.Create a variable called "sum" that holds the sum of var1 and var2.
+
+
+ $sum = ( $var1+ $var2)
+
+4.Create a variable called "sub" that holds the difference of var1 and var2.
+
+$sub = ($var1-$var2)
+
+5.Create a variable called "prod" that holds the product of var1 and var2.
+$prod = ($var1 * $var2)
+
+6.Create a variable called "quo" that holds the quotient of var1 and var2.
+$quo = ($var1 / $var2)
+
+7.Replace the variables in text with their values in the following format:
+
+
+"var1" + "var2" = "sum"
+
+
+Write-Host "$var1" + "$var2" = "$sum"
+
+
+8.Replace the variables in text with their values in the following format:
+
+
+
+ write-host "$var1" - "$var2" = "$sub"
+
+
+
+
+
+9.Replace the variables in text with their values in the following format:
+
+
+
+write-host "$var1" * "$var2" = "$prod"
+
+
+
+
+
+10.Replace the variables in text with their values in the following format:
+
+
+
+ write-host "$var1" / "$var2" = "$quo"
+
+#>
+_____________________________________________________________________________________________________________________________
+ACTIVITY 4:
+<#
+
+Create an array containing a range with a random starting and stopping point.  The starting point will be a random number from -10 through 0.
+The ending point will be a random number from 1 through 20.
+For example, if the first random number is -3, and the second random number is 2, your array will be -3, -2, -1, 0, 1, 2
+Create a variable that contains the contents of the array in reverse
+Using the above example, your reversed array will be 2, 1, 0, -1, -2, -3
+
+
+$ARRAY = (get-random -minimum -10 -maximum 0)..(get-random -Minimum 1 -Maximum 20)
+$rev = $array[($array.length-1)..0] 
+
+#>
+
+_____________________________________________________________________________________________________________________________
+ACTIVITY %:
+
+<#
+
+Create two empty hash tables with the following names:
+employee1
+employee2
+Using the following table of key-value pairs, apply each key-value to the empty hash tables.
+
+First   mary                   john
+Last    hopper                 williams
+ID      001                    002
+Job   software developer       Web Developer
+
+Now add a new key called Username which holds a contraction of the employee’s first initial then last name then ID. (i.e. mhopper001).
+Mary got promoted to "Software Lead" so the job key for Mary needs to be changed to "Software Lead"
+Create a new hash table called "employee3" that contains the following values with the respective keys.
+
+first     last     id      job
+
+alex       moran    003     Software Developer
+
+ add a new key called "status" that lods the values:
+
+ mary                john            alex
+
+management           intermediate    Entry level
+
+Make sure you use both dot notation and square brackets to manipulate your hash tables.
+
+
+
+
+#>
