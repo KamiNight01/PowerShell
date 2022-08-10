@@ -175,10 +175,7 @@ $rev = $array[($array.length-1)..0]
 #>
 
 _____________________________________________________________________________________________________________________________
-ACTIVITY %:
-
-<#
-
+ACTIVITY 5:
 Create two empty hash tables with the following names:
 employee1
 employee2
@@ -197,7 +194,7 @@ first     last     id      job
 
 alex       moran    003     Software Developer
 
- add a new key called "status" that lods the values:
+ add a new key called "status" that loads the values:
 
  mary                john            alex
 
@@ -206,6 +203,168 @@ management           intermediate    Entry level
 Make sure you use both dot notation and square brackets to manipulate your hash tables.
 
 
+$employee1 = [ordered]@{ first="Mary" ; last="Hopper" ; ID="001" ; Job="Software Developer"}
+$employee2 = [ordered]@{ first="John" ; last="Williams" ; ID="002" ; Job="Web Developer"}
+$employee1.add("Username","mhopper001")
+$employee2.add("Username","jwilliams002")
+$employee1.Job="software Lead"
+$employee3 = [ordered]@{ first="Alex" ; last="Moran" ; ID="003" ; Job="Software Developer"}
+$employee1.add("Status","Management")
+$employee2.add("Status","Intermediate")
+$employee3.add("Status","Entry Level")
+$employee3.add("Username","amoran003")
+
+ OR
+
+$employee1 = [ordered]@{ first="Mary" ; last="Hopper" ; id="001" ; job="Software Developer ;username="mhopper001" ; status="management"}
+$employee2 = [ordered]@{ first="John" ; last="Williams" ; id="002" ; job="Web Developer"  ; username="jwilliams002" ;status="intermediate" }
+$employee3 = [ordered]@{ first="Alex" ; last="Moran" ; id="003" ; job="Software Developer" ; username="amoran003" ; status="entry level"}
+
+
+
+
+_______________________________________________________________________________________________________________________________________________
+ACTIVITY 6
+
+
+Display the start time of the earliest and latest running processes
+get-process | where-object {$_.Starttime} | measure-object -property starttime -minimum -maximum | select-object -property name, minimum, maximum
+
+Identify a cmdlet that returns the current date and time then using this cmdlet and Select-object, display only the current day of the week
+
+get-date | select-object DayofWeek
+
+(get-date).dayofweek
+
+Identify a cmdlet that displays a list of installed hotfixes.
+
+
+get-hotfix
+
+Extend the expression to sort the list by install date, and display only the install date and hotfix ID.
+
+Get-HotFix |Sort-Object -Property InstalledOn |Select-Object installedon,  HOTFIXID
+
+Extend the expression further, but this time sort by description, include description, hotfix ID, and install Date.
+
+Get-HotFix | Sort-Object description | Select-Object description, HotFixID, InstalledOn
+
+
+___________________________________________________________________________________________________________________________________________________
+Create a custom object that contains information about the host system using the following:
+Win32_ComputerSystem
+Win32_BIOS
+Win32_OperatingSystem
+Win32_LogicalDisk
+Use the cmdlet Get-WmiObject to obtain the needed information
+
+ComputerName    : DESKTOP-5KJDVS2
+OperatingSystem : Microsoft Windows 10 Pro
+Version         : 10.0.17134
+Manufacturer    : Dell Inc.
+Disks           : {\\DESKTOP-                          5KJDVS2\root\cimv2:Win32_LogicalDisk.DeviceID="C:",
+                  \\DESKTOP-5KJDVS2\root\cimv2:Win32_LogicalDisk.DeviceID="D:"}
+----
+__-----------------------------------____---------------------------------_____-------------------------_____--_-_-_-_-_-
+
+
+$comp = new-object computer
+$cname = Get-WmiObject win32_computersystem | Select-Object -ExpandProperty name
+$OS = Get-WmiObject win32_operatingsystem  | Select-Object -ExpandProperty caption
+$Ver = Get-WmiObject win32_operatingsystem  | Select-Object -ExpandProperty version
+$manuf = Get-WmiObject win32_BIOS  | Select-Object -ExpandProperty manufacturer
+$disks = Get-WmiObject win32_logicaldisk  | Select-Object -ExpandProperty path |Select-Object path
+
+Add-Member -MemberType NoteProperty -name ComputerName: -Value $cname -InputObject $comp
+Add-Member -MemberType NoteProperty -name OperatingSystem: -Value $OS -InputObject $comp
+Add-Member -MemberType NoteProperty -name Version: -Value $Ver -InputObject $comp
+Add-Member -MemberType NoteProperty -name Manufacturer: -Value $manuf -InputObject $comp
+Add-Member -MemberType NoteProperty -name Disks: -Value $disks -InputObject $comp
+$comp | fl
+
+
+OR
+
+
+$compi = New-Object Object
+Add-Member -MemberType NoteProperty -name Version -value (Get-WmiObject Win32_OperatingSystem).version -InputObject $compi
+Add-Member -MemberType NoteProperty -name OperatingSystem -value (Get-WmiObject Win32_operatingsystem).caption -InputObject $compi
+Add-Member -MemberType NoteProperty -name Manufacturer -value (Get-WmiObject Win32_BIOS).manufacturer -InputObject $compi
+Add-Member -MemberType NoteProperty -name Disks -Value (get-wmiobject Win32_LogicalDisk) -InputObject $compi
+Add-Member -MemberType NoteProperty -name ComputerName -value (Get-WmiObject Win32_Computer
+System).name -InputObject $compi
 
 
 #>
+
+_______________________________________________________________________________________________________________________________________________
+
+
+ACTIVITY 8:
+
+<#
+Find and extract the model number from the provided lines of text. If there isn’t a model number then display to the user that a model number wasn’t found
+Check both lines for model numbers and report individually the line and model number if found.
+$line1 = "Do you have model number: MT5437 for john.doe@sharklasers.com?"
+$line2 = "What model number for john.doe@sharklasers.com?"
+Exercise Criteria
+Must use at least ONE comparison operator
+Must use at least ONE If Condition OR Switch Statement
+Reminder of options available
+Switch Statement
+If/IfElse/Else Condition
+match, contains, in, -eq, -le, etc…​
+Comparison combinations
+------------------------
+
+
+$line1 = "Do you have model number: MT5437 for john.doe@sharklasers.com?"
+$line2 = "What model number for john.doe@sharklasers.com?"
+$patern = '[A-Za-z]{2}\d{2,5}'
+
+switch($pattern) {
+    {$line1 -match $_ } {
+        $line1 -match $pattern |out-null
+        $model = $Matches[0]
+            "yes the model is $model" }
+    {$line2 -match $_} {
+        $line2 -match $pattern |out-null
+        $model = $matches[0]
+            "yes the model is $model"}
+    {$line1 -notmatch $_} {
+        "there is no model number in line1"}
+    { $line2 -notmatch $_} {
+        "there is no model number in line2"}
+}
+_________________________________________________________________________________________________________________________________________
+ACTIVITY 9:
+<#
+ACTIVITY: Looping & Iteration
+* Part 1
+** Use an array to iterate and open the following
+*** Notepad
+*** MS Edge
+*** MSpaint
+** Query the processes
+** Kill the processes from PowerShell
+* Part 2
+** Use an array to iterate and open the following
+*** Notepad
+*** MS Edge
+*** MSpaint
+** Query the processes
+** Save the ProcessIDs to a text file called *_procs.txt_*
+** Iterate through the ProcessIDs in the text file and kill them
+* Part 3
+** Use an array to iterate and open the following
+*** Notepad
+*** MS Edge
+*** MSpaint
+** Query the processes and display only the following information in order by process ID
+*** Process ID
+*** Process Name
+*** The time the process started
+*** The amount of time the process has spent on the processor
+*** The amount of memory assigned to the process
+
+
