@@ -370,3 +370,227 @@ ACTIVITY: Looping & Iteration
 
 
 
+#1 store elements in aray 
+$procs = "notepad", "mspaint"
+
+$procs | foreach-object { Start-Process $_ }
+
+get-process 
+
+$procs | foreach-object { Stop-Process -processname $_ }
+
+#2
+
+$file = "$pwd\procs.txt"
+set-content -value $null $file
+foreach($proc in $procs) {
+start-process $proc
+get-process | where-object {$_.name -like $proc} | foreach-object {add-content -path $file -value $_.id} }
+#iterate throguh ids on procs.tct tp kill process.
+Get-content $file | foreach-object{stop-process -id $_}
+foreach($proc in $procs){
+  get-process | where-object {$_.name -like $proc} | `
+  format-table -property id, name, starttime, totalprocessortime, `
+  virtualmemorysize, workingset64 }
+
+
+
+
+
+  
+$procs = "notepad", "mspaint"
+Foreach ($process
+
+
+#>
+
+___________________________________________________________________________________________________________________
+ACTIVITY 10:
+
+<#
+
+
+Write a function that returns the Ordinal date of the current date.
+Example
+PS> Get-OrdinalDate
+2020-36
+
+function Ordate{
+$year =(get-date).year
+$day=(get-date).dayofyear
+write-host "$year-$day"
+}
+Orddate
+
+
+Create a function that takes a number(n) as an argument and returns the square(n^2) of the number.
+Example
+PS> Get-SquareNum 10
+100
+
+function SirSquarey([int]$numero)
+{
+    $output = $numero * $numero 
+    return $output
+}
+
+
+
+
+Create a function that takes three (3) arguments and returns the product of the arguments.
+Example
+PS> Get-Product 5 5 5
+125
+
+
+$arg1 = [int](Read-Host)
+$arg2 = [int](Read-Host)
+$arg3 = [int](Read-Host)
+$arguments = ($arg1 * $arg2 * $arg3)
+ return $arguments
+  
+or 
+  
+function multiplexy ($1, $2, $3) {$1 * $2 * $3 }
+
+#>
+
+___________________________________________________________________________________________________________________
+
+ACTIVITY 11:
+
+<#
+1.Create a function that takes two(2) integer values, ```$a``` and ```$b```, that are the lengths of two(2) legs of a right triangle and returns the length of the hypotenuse.
+[IMPORTANT]
+====
+Use the Pythagorean Theorem (a^2^ + b^2^ = c^2^) to find the value of the hypotenuse.
+
+
+function pythyguy {
+param(
+    [parameter(mandatory=$true)][int]$a,
+    [parameter(mandatory=$true)][int]$b
+    ) 
+     $c = ($a * $a) + ($b * $b)
+     [math]::sqrt($c)
+     }
+
+      or 
+function pythyguy ($a,$b){
+
+$c = ($a * $a) + ($b * $b)
+     [math]::sqrt($c)
+}
+
+
+
+====
+2. Create a function that takes two(2) values, ```$a``` and ```$b```, as two(2) angles in degrees of a triangle. Return the value of the missing angle.
+[IMPORTANT]
+====
+All angles of a triangle add up to be 180 degrees
+
+
+
+function lengthydude {
+param(
+[parameter(mandatory=$true)][int]$a,
+    [parameter(mandatory=$true)][int]$b
+    ) 
+    $angledboi= 180- ($a +$b )
+    Write-Output $angledboi
+
+}
+
+OR
+function lengthydude ($a, $b) {
+ $angledboi= 180- ($a +$b )
+    Write-Output $angledboi
+
+}
+
+
+
+====
+3. Create a function that takes the following as mandatory parameters:
+** First Name
+** Last Name
+** Age
+** Weight in pounds(lbs)
+and returns the information in a hash table using the keys: first, last, age, and weight with the ```weight``` value converted to kilograms(kg) rounded to the nearest whole number
+[IMPORTANT]
+====
+One(1) Kilogram(Kg) = 2.2 pounds(lbs)
+----------------------------------------------------
+
+
+function weightedboi {
+    param(
+     [Parameter(Mandatory=$true)]
+     $Fname,
+     [Parameter(Mandatory=$true)]
+     $Lname,
+     [Parameter(Mandatory=$true)]
+     $Age,
+     [Parameter(Mandatory=$true,helpmessage="input weight in pounds")]
+     $Weight
+     )
+
+     $getfit = [math]::Round($Weight / 2.2)
+
+     Write-Output  "Good Morning $Fname $Lname"
+     Write-Output  "$Age years old i see"
+     Write-Output  "your weight converted to KG is  $getfit"
+
+
+}
+
+
+#>
+
+__________________________________________________________________________________________________________________
+
+ACTIVITY 12:
+<#
+Create an advanced function using Begin, Process, and End, that takes 
+two(2) arguments. The first argument being an array of at least ten(10)
+integers and the second argument being a single integer. Search the array argument for every occurrence
+of the single integer argument then return the sum of all elements
+in the array excluding every occurrence 
+of the single integer argument
+PS> get-multisum @(1,2,3,4,5,6,7,8,9,10) 5
+50
+
+function Find-sums ([array]$array,[int]$nums) {
+Begin {
+        sum = 0
+    }
+    process {
+    ForEach ($numb in $array) {
+        if ($numb - ne $nums) {
+            $sums = $sum+$numb
+
+            }
+         }
+    }
+End {
+        write-host $sum
+    }
+}
+
+
+
+
+
+
+create an advanced function using Begin, Process, End, that prompts the user to enter the names of three(3) U.S.
+ States then returns the names of the states in the order of longest name to shortest name and the amount of
+  characters in each name.
+PS> Get-LongestName
+Georgia: 7
+Idaho: 5
+Utah: 4
+
+
+
+
