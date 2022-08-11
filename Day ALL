@@ -1,0 +1,646 @@
+comments in powershell are # same as normal
+a multi line comment starts with <# and ends with #>
+a hearstring is a block of code that starts with @' and ends with '@, useful for running group of commands as a variable
+home and end buttons take you to the start and end of the line, ctrl+ arrow key to go word by word on a line
+docs.microsoft.com most helpful for looking up commands online
+
+
+Get-ChildItem -path C:\ -recurse -filter *.pf -name 
+#switch paramaeters : boolean in nature. when used the parameter is turned on
+#otherwise it'xs off by default  
+#-recurse    - is boolean 
+Get-Childitem -recurse -filter *.pf C:\ -name
+get-service -name Power,Dnscache
+
+Get-ChildItem -recurse c:\Windows\System32\Drivers
+gci -rec C:\WIndows\System32\drivers       #( shortens it ) 
+
+
+#powershell views  parameters set as a  the paramter like get-service  and you can use -computername to get a specific name. 
+#positional parameter are paramater wthat are fixed in positions. 
+#comman paramters are given all types.
+ # all alias are stored in $alias  so if you do $alias:man  show you what it does 
+
+
+ #display a list of windows firewall rules
+ get-newfilewallrules
+
+ # get-alias show  you the list of all set aliases.
+  get-alias -name dir
+  #set a new alias  dora that runs the command explorer.exe
+  set- alias dora explorer.exe
+   #delete the alias dora 
+  del alias:dora 
+  #set alias only sets non-persistant  so you need to set it in profile to have them persist thorught power boot.
+
+DECLARING A VARIABLE
+<#1. Always use the $, for both declaring and using a variable
+$number = 61742
+2. Spaces do not matter in Powershell
+$number=6142
+3. Variable substitution is the same as in Python
+$number - 1
+4. You can create multiple variables in the same line
+$var1,$var2 = 6555, -1
+#>
+
+
+
+<#
+
+________________________________
+normal /traditional array --> $array - 1.2.3
+ps Interp:
+{1,2,3}
+Human view :
+1,
+2, 
+3
+
+$array[1] = 2
+____________________________________________
+Nested/jagged array  --> $nested = @,1,$array,#
+
+Ps Interp:
+{@,!,{1,2,3},#}
+human view:
+@, $null, $null
+!, $null, $null
+1, 2,     3,                           #null is used as void space so if you try to get the value where null is you'll get error
+#, $null, $null
+
+nested[2]=123
+$nested[2][1] = 2
+$nested[2][2] = 3
+$nested[3][1] = $errpr
+
+_________________________________________________________________________
+multi-dimnesional --> $multi = tri, square, $nested, cir
+
+ps interp:
+{tri, square, {@,!,{1,2,3},#},cir
+HUman View :
+tri, $null
+square, 
+
+@        , !,1, #
+             2,
+             3,
+cir
+
+
+multi[2] = @,!,{1,2,3},#
+$multi[2][2] = 1,2,3
+$multi[2][2][1]= 2
+$multi[2][2][2]= 3
+
+$multi [1][2][3] = $error
+
+--------------------------------   actual interpretation 
+HUman View :
+tri,    $null $null $null
+square, $null $null $null 
+@,      !,    1,    #
+$null   $null 2,    $null
+$null $null   3,    $null
+cir     $null $null $null 
+-------------------------------
+
+
+
+#>
+
+
+
+_________________________________
+DAY2:
+HASHTABLES
+<#
+
+hash tables    -- similar to an dictionary/array but called differently 
+
+@{}    --- to declare a hash table 
+
+@{key="value" ; key2="value2"}                 - seperate with ; instead of commans like in a array.
+
+ 
+
+
+$hashy= @{key="value" ; key2="value2"} 
+$hashy
+
+Name                           Value                                                                                       
+----                           -----                                                                                       
+key                            value                                                                                       
+key2                           value2                                                                                      
+
+
+$another= @{}
+$another
+(empty)
+$another.GetType().name
+Hashtable
+
+$another.is_anime="yes"
+$another
+Name                           Value                                                                                       
+----                           -----                                                                                       
+is_anime                       yes   
+
+$another["IS Good"] = "depends"
+$another.add("OPM","Saitama")
+
+$another
+
+Name                           Value                                                                                       
+----                           -----                                                                                       
+is_anime                       yes                                                                                         
+IS+good                        depends                                                                                     
+OPM                            Saitama                                                                                     
+
+
+ $ordered = [ordered]@{}
+ $ordered."McDonalds"= @("Bigmac", "1 chicken Nuggy", "8 happy meals", "1 fillet fish", " 2lg gries")
+ $ordered.add("taco bell", "a bad time")
+ $ordered["chick-fil-a"]= "2 spicy chicken  sandwiches"
+ $ordered
+
+Name                           Value                                                                                       
+----                           -----                                                                                       
+chick-fil-a                    2 spicy chicken  sandwiches                                                                 
+taco bell                      a bad time                                                                                  
+McDonalds                      {Bigmac, 1 chicken Nuggy, 8 happy meals, 1 fillet fish...}                                  
+
+$ordered.keys
+chick-fil-a
+taco bell
+McDonalds
+
+
+$ordered.values
+2 spicy chicken  sandwiches
+a bad time
+Bigmac
+1 chicken Nuggy
+8 happy meals
+1 fillet fish
+ 2lg gries
+
+ #>
+ _________________________________________________________________________________________________
+PIPELINES
+
+<#   
+
+get-service when ran does  get-service | out-default
+get-service |format-table *
+get-service | get-member ( shows all method properties of the object) for the get-service all the method and properties 
+Get-Member -InputObject Get-Service ( get-s more object that are more specific to methods you cna use plus -options
+
+Get-Service bfe | Get-Member gets the service and then the member assiciated with it 
+
+(Get-Service bfe).startType     (- get's the start type of the service bfe)
+ automatic
+(Get-Service xblgamesave).stop()    - stops the specified service.
+
+Get-Service |Format-Table name, status
+  
+formats to shows only the services name and status 
+
+
+
+Get-ChildItem |Sort-Object -Property extension | Format-Table -GroupBy extension     - groups it by it's different extension like (.txt .dlls .dat cpl )
+
+
+
+ Get-Service |  Get-Member    - shows you all the -protperty options available for get-service command 
+
+Get-Service | Sort-Object -Property status   - sorts based on the status of the service going from stopped first to them  running
+
+
+
+Get-Service | Sort-Object status, name       ----sorts based on status then on name 
+
+
+
+"1", "7", "10", "8" , "2" , "3" |Sort-Object
+
+ outputs in ascii order 
+
+"1", "7", "10", "8" , "2" , "3" |Sort-Object -Property {[int]$_ }
+
+ outputs in int as it was told to sort in that order
+
+ "1", "7", "10", "8" , "2" , "3" |Sort-Object -Property {get-random}   or  1..100|Sort-Object -Property {get-random}
+
+  sorts randomly 
+
+  __________________\
+
+  Get-Service |Where-Object {$_.status -eq "running" }   gives you only the running services 
+
+  Get-Service | Select-Object -First 10
+
+
+  Get-Process svchost  |  Select-Object -ExpandProperty handles  or ( get-processs svchost).handles   #(gives you jsut the handles without the delimiter at top 
+  Get-Process svchost  |  Select-Object handles -gives you the delimter name so you cant iterate though this.
+
+
+
+
+  Get-Process |Sort-Object | Select-Object -last 10 |Format-Table processname , starttime
+   gives you the  10 longest running process
+
+   Get-Process | Where-Object processname -ne "Idle" 
+    |Sort-Object starttime | Select-Object -last 10 |Format-Table processname , starttime
+
+
+
+
+    1, 12, 12, 1, 2, 12, 12, 14, 4, 6, 7, 8, 9 ,12 |Sort-Object |Get-Unique  
+    unique command needs to be sorted first before it can be checked for unique variables 
+
+  _____________________________
+
+difference between write-host and write-output
+
+function fruit-host{
+write-host "apple"
+write-host "orange"                     - outputs in the order it was declared 
+write-host "banana"
+}
+
+function fruit-output {
+write-output "apple 
+write-output " orange"              - outputs in alphabetical order since it was fed through an pipeline that sorts it  aplhabetical 
+write-output "banana"
+}
+#>
+
+<#
+FORMAT
+
+Get-Command -verb format
+-----------     ----                                               -------    ------                                                                                                                                                                        
+Function        Format-Hex                                         3.1.0.0    Microsoft.PowerShell.Utility                                                                                                                                                  
+Function        Format-Volume                                      2.0.0.0    Storage                                                                                                                                                                       
+Cmdlet          Format-Custom                                      3.1.0.0    Microsoft.PowerShell.Utility                                                                                                                                                  
+Cmdlet          Format-List                                        3.1.0.0    Microsoft.PowerShell.Utility                                                                                                                                                  
+Cmdlet          Format-SecureBootUEFI                              2.0.0.0    SecureBoot                                                                                                                                                                    
+Cmdlet          Format-Table                                       3.1.0.0    Microsoft.PowerShell.Utility                                                                                                                                                  
+Cmdlet          Format-Wide                                        3.1.0.0    Microsoft.PowerShell.Utility                                                                                                                                                  
+
+
+
+ $myblock = Get-Service |Format-Table name, status     - command substitution 
+                                                        so that $myblock can be used to run the command specified 
+
+$a = 1 
+$c = 1
+$b = {1 + 1 + $c}
+$a += &$b
+
+
+
+ MEASURE     - anything that has a countable property 
+ Get-ChildItem |Measure-Object length
+
+
+ Get-ChildItem |Measure-Object length -average -Maximum -Minimum -Sum 
+
+
+Count    : 4327
+Average  : 425389.918881442
+Sum      : 1840662179
+Maximum  : 144534560
+Minimum  : 33
+Property : length
+
+
+
+
+
+
+'what is the answer to life, the universe, and everything?' > test.txt
+$before = Get-childitem
+'42' > test.txt
+$after = Get-childitem 
+
+ compare-object $before $after -property length, name
+
+
+
+
+
+
+
+
+
+#>
+
+
+ OBJECT
+<#
+ something that have attribs and behaviors 
+
+
+ ## create new object ising new object
+ $mycar = New-Object object 
+ ## adding properties using add-member
+ add-member -MemberType NoteProperty -Name color -Value "blue-Gray Green Purplish thing" -InputObject $mycar
+ 
+ ##adding using shortened parameters 
+ Add-Member -MemberType NoteProperty -Name make  -Value "Toyoda Forvolet" -InputObject $mycar
+ ##adding using positional parameters
+ Add-Member -InputObject $mycar NoteProperty Model "Model Cherokee Sport Roadster X sport maxinus"
+ ##adding through the pipeline
+ $mycar | Add-Member NoteProperty Cab "big", "very big like a obese american"
+ Add-Member -MemberType ScriptMethod -Name Read -Value {"I'm not entirely sure  this book is rated X"} -InputObject $mycar
+ Add-Member -MemberType ScriptMethod -name Cook -Value {"hope the oil is human-friendly in this deep fryer"} -InputObject $mycar
+ Add-Member -MemberType ScriptMethod -Name Drive -Value { "i dont know i havent mastered it yet"} -InputObject $mycar
+ Add-Member -MemberType ScriptMethod -Name Script -Value {"give me all the binary i love treading over it"} -InputObject $mycar
+
+
+
+
+
+ #>
+
+ ## create new object ising new object
+ $mycar = New-Object object 
+ ## adding properties using add-member
+ add-member -MemberType NoteProperty -Name color -Value "blue-Gray Green Purplish thing" -InputObject $mycar
+ 
+ ##adding using shortened parameters 
+ Add-Member -MemberType NoteProperty -Name make  -Value "Toyoda Forvolet" -InputObject $mycar
+ ##adding using positional parameters
+ Add-Member -InputObject $mycar NoteProperty Model "Model Cherokee Sport Roadster X sport maxinus"
+ ##adding through the pipeline
+ $mycar | Add-Member NoteProperty Cab "big" "very big like a obese american"
+ Add-Member -MemberType ScriptMethod -Name Read -Value {"I'm not entirely sure  this book is rated X"} -InputObject $mycar
+ Add-Member -MemberType ScriptMethod -name Cook -Value {"hope the oil is human-friendly in this deep fryer"} -InputObject $mycar
+ Add-Member -MemberType ScriptMethod -Name Drive -Value { "i dont know i havent mastered it yet"} -InputObject $mycar
+ Add-Member -MemberType ScriptMethod -Name Script -Value {"give me all the binary i love treading over it"} -InputObject $mycar
+
+
+
+
+
+
+ COMPARISION OPERATORS 
+ <#
+
+ CONDITIONALS
+ ______________________
+"abc" -eq "abc" , "def" (always compare to the LEFT)
+"abc", "def" -ne "abc" (returns "def")
+7, 8, 9 -gt 8 (returns 9)
+7, 8, 8 -lt 9 (returns 7, 8)
+5, 6, 7 -ge 6 (returns 5, 6)
+5, 6, 7 -le 6 (returns 5, 6)
+"Inky" -like "*" (returns true)
+
+______________________________________
+
+
+ LIKE
+ ____________
+ "inky" -like "*"   ( will be true )
+ "blinky" -like "Bl?nky"    - true ( since ? means any one character)
+ "pinky -like "[L-Q]inky"   pinky like any charcter between l-q so it will be true 
+ "clyde" - like "[ABC]lyde"   - clyde like anything that's [abc] lyde so true 
+
+NOTLIKE 
+"inky" -notlike "*"   -false since it's equal to anything 
+"Blinky" -notlike "blin?ky"    -true 
+"pinky" -notlike "[A-F]inky" so= since it doesnt fall on the the  range it's true that's it's not like 
+"clyde" -not like "[DEF]lyde"     true 
+
+
+MATCH
+$text = "Your account username is ACE4495"
+$pattern = '([A-F]{3})(\d{4})'    #true 
+$text -match $pattern
+
+CONTAINS
+
+$ghosts = 'inky','blinky', 'pinky', 'clyde'
+$ghosts - contains 'pinky'       #true
+
+IN
+$ghosts = 'inky','blinky', 'pinky', 'clyde'
+'pinky' -in $ghosts
+
+
+ #>
+
+ WHERE OBJECT:
+ <# 
+ #displays only tyhe servies with th estatus running 
+ Get-Service |Where-Object{$_.status -eq 'running' }
+ #shows txt fles with size greater than 100
+ Get-ChildItem *.txt |Where-Object {$_.length -gt 100} 
+ # displays all processin whise company names begin with micro 
+ Get-Process |Where-Object {$_.Commpany -like 'micro*'} | Format-Table name, description, company
+ #>
+
+ IF else 
+ <# $x =2 
+ if ($x
+
+
+
+
+ #>
+
+ $x =2 
+ if ($x -eq 5 ) {
+    write-host "Bob"
+ }
+ elseif ($x -eq 4) {
+    Write-Host "sue"
+}
+elseif($x -eq 2){
+"tom"
+}
+elseif ($x -gt 1) {
+"mary"
+}
+else{
+"whoam i"
+}
+
+
+# SWITCH
+
+switch(10)
+{
+    (1 + 9) {
+        "congrats you did math right"
+     }
+     (1+10) {
+        "this is wrong"
+     }
+     (11-1) {
+        "congrat you did minus right"
+     }
+     (1-11) {
+         "congrats you did math wrong "
+     }
+}
+
+
+
+
+FOR LOOPS 
+
+for (Initialization; condition; increment)
+{
+    code block to be executed.
+}
+
+foreach ($item in expression)
+ { 
+    code to be executed
+ }
+
+ $object |ForEach-Object { code block to be executed }
+
+
+
+
+ WHILE LOOPS 
+ while(condition) {
+    code block to be executed
+    }
+
+do {
+    code block 
+    }while(condition)
+
+
+
+$num = 4 
+
+while($num -lt 3) {$num; $num++}
+$num
+
+
+do{
+    $num
+    $num++
+}until($num -gt 3)
+
+$num
+
+
+$num = 0 
+while ($num -lt 10) {
+#num +=1
+if ($num -eq 5) {
+    break
+}
+$num
+
+
+
+____________----__-_--_-___-------------_____-_-___---____----_______---------------------______----
+ FUNCTIONS 
+ function <function name> { <function code goes here }
+  function Hello-world {"hello word"}
+
+
+ when a function is delcared, it only exists for the individual powershell session.script 
+ so tghet are stired withing 'function' os drive, - since they are in a ps drive, we can list what functions can do 
+
+ 
+ Get-Content function:Hello- World
+  to declare a function witrh an parameter  to pass, heres the syntax 
+  fuction <function name> ($paramter) { function code gaes here }
+
+
+
+  function basic-param(value) {
+        if (value) {
+
+               write host "the paramtert is $value" - foregroundcolor green -nonewline
+            }
+            else {
+                write-host " there is no paramter being passed" - foregroundcolor Red 
+            }
+         }
+
+function Positional-params {
+    param(
+    [Parameter(Mandatory=$true,Position=0)]
+    [int]
+    $number,
+    [Parameter(Mandatory=$true,Position=1)]
+    [string]
+    $string,
+    [Parameter(Mandatory=$true,Position=2)]
+    [string]
+    $anotherstring
+    )
+    Write-Output "$number is the first positional paramter"
+    Write-Output "$string is the  secondary parameter"
+    Write-Output "$anotherstring is the last boohoo!!"
+
+
+Positional-params -number 1124 -string "i'm lost" -anotherstring "what you doing ste,,,,"
+}
+
+
+function cmdlet-function {
+[cmdletBinding(DefaultParameterSetName='Tacos')]
+    param(
+    [Parameter(ParameterSetName="Tacos",Mandatory=$true)]
+    $flavor,
+    [Parameter(ParameterSetName="Tacos",Mandatory=$true)]
+    $cheese,
+    [Parameter(ParameterSetName="Tacos",Mandatory=$true)]
+    $roastedpineapple,
+    [Parameter(ParameterSetName="Burrito",Mandatory=$true)]
+    $beans,
+    [Parameter(ParameterSetName="Burrito",Mandatory=$true)]
+    $rice,
+    [Parameter(ParameterSetName="Burrito",Mandatory=$true)]
+    $chicken
+     )
+
+     $ParameterSetName = $PScmdlet.ParameterSetName
+     "The $ParamterSetName Parameter set was utilized"
+}
+
+
+ to run ------->  cmdlet-function -beans  "blackeyed peas" -rice "jasmine"
+
+
+
+ function Function-Blocks {
+ [cmdletBinding()]
+    param()
+
+    begin {
+
+    <# 
+      when the function is called this block is used to providee optional one time processing for the fuction 
+      does whatever is in here prior to anything lese in the function
+      #>
+    }
+Process {
+<#
+-this block is used to provide record-by-record processing for the function.
+executes code as many times as necessary based off of how many objects are sent to the function  through Powershell
+---can use '$_' to grab the individual values passed to the function without having to call on $input or $args 
+#>
+
+}
+end {
+    <#
+    this block is used to provide optional one time post-processing for the function 
+    -executes this clode at the end of the function prior to exiting the function
+    #>
+
+}
+
