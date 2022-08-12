@@ -1138,3 +1138,41 @@ $employee1.Status = "Management"
 $employee2["Status"] = "Intermediate"
 $employee3.Status = "Entry Level"
 #>
+
+
+
+_________________________________________________________________________________________________________________________________________________________
+EXCERCISE 13 
+
+
+function atomicIp {
+$ipconfig = ipconfig
+$ipv4 = $ipconfig -match "Ipv4 Address"
+$subnet = $ipconfig -match "Subnet Mask"
+$gate = $ipconfig -match "Default Gateway"
+Write-host IP:("$ipv4".split(':'))[-1]
+Write-host Subnet:("$subnet".split(':'))[-1]
+Write-host Gateway:("$gate".split(':'))[-1]
+}
+
+#$IP = (Get-Content C:\Users\student\Desktop\dns.txt) -match '(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}' | select-string "www.*.com" 
+#write-host "$IP".split(" ")[-2]
+
+
+ function urlboi {
+ $IP = Get-Content C:\Users\student\Desktop\dns.txt |  select-string -pattern "www.*.(com|org|net)" -AllMatches  | Select-String "www.*.(com|org|net)" 
+ $IP.matches.value | group-object -noelement
+  }
+
+
+  function netinfo {
+    $urls = get-content   C:\Users\student\Desktop\dns.txt | select-string -pattern "www\.\w+.com|www\.\w+.org"  | % {$_.matches} | % {$_.value} | group-object -noelement
+    Write-Output $urls
+    }
+
+
+    function urlboid {
+    $Iper = Get-Content C:\Users\student\Desktop\dns.txt
+    $dnsm = $Iper -imatch "www.[A-Za-z0-9]{0,}.com" | Select-String "www.*.com"
+    $dnsm.matches.Value |sort |group | Format-Table -Property count, name  -HideTableHeaders
+    }
