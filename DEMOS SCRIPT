@@ -154,3 +154,1080 @@ wh "Hello-World" -ForegroundColor Cyan
 Get-Content function:Hello-World
 
 pause
+
+
+
+______________________________________________________________________________________________________________________
+
+
+#2_Create_Funtion_with_an_parameter
+New-Alias -Name wh -Value Write-Host
+
+Function Pause {
+   $Message = "Press any key to continue..."
+   # Check if running in PowerShell ISE
+   
+   if ($psISE) {
+      # "ReadKey" not supported in PowerShell ISE.
+      # Show MessageBox UI
+      $Shell = New-Object -ComObject "WScript.Shell"
+      $Button = $Shell.Popup("Click 'OK' to continue.", 0, "$null", 0)
+      Return
+   }
+ 
+   $Ignore =
+      16,  # Shift (left or right)
+      17,  # Ctrl (left or right)
+      18,  # Alt (left or right)
+      20,  # Caps lock
+      91,  # Windows key (left)
+      92,  # Windows key (right)
+      93,  # Menu key
+      144, # Num lock
+      145, # Scroll lock
+      166, # Back
+      167, # Forward
+      168, # Refresh
+      169, # Stop
+      170, # Search
+      171, # Favorites
+      172, # Start/Home
+      173, # Mute
+      174, # Volume Down
+      175, # Volume Up
+      176, # Next Track
+      177, # Previous Track
+      178, # Stop Media
+      179, # Play
+      180, # Mail
+      181, # Select Media
+      182, # Application 1
+      183  # Application 2
+ 
+   #Write-Host -NoNewline $Message
+   While ($KeyInfo.VirtualKeyCode -Eq $Null -Or $Ignore -Contains $KeyInfo.VirtualKeyCode) {
+      $KeyInfo = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown")
+   }
+}
+
+Function line {
+wh $null
+wh '-------------------------------------------------------------------||'
+wh $null
+}
+
+Function Split {
+pause | Out-Null
+line
+}
+Clear-Host
+
+#Function with parameter Syntax
+invoke-expression @"
+wh $null
+wh "To declare/create a function with an parameter to pass, heres the syntax:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " <function name> " -ForegroundColor Gray -NoNewline
+wh "(" -ForegroundColor Cyan -NoNewLine
+wh "$<parameter name>" -ForegroundColor Red -NoNewLine
+wh ") " -ForegroundColor Cyan -NoNewLine
+wh "{" -ForegroundColor Cyan -NoNewline
+wh " <function code goes here> " -NoNewline
+wh "}" -ForegroundColor Cyan
+wh $null
+wh "#Note: The parameter you would be passing WILL be a variable when passed to the function,
+       therefore we must declare it as a variable when creating the function"
+"@
+
+split
+
+# Creating a Function with parameter Demo
+invoke-expression @"
+wh $null
+wh "Here's an example of an parameter being pass to a function:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " basic-param " -ForegroundColor Gray -NoNewline
+wh "(" -ForegroundColor Cyan -NoNewLine
+wh '`$value' -ForegroundColor Red -NoNewLine
+wh ") " -ForegroundColor Cyan -NoNewLine
+wh "{" -ForegroundColor Cyan -NoNewline
+wh $null
+wh '    if (`$value) {'
+wh '        Write-Host "The parameter is ' -NoNewLine
+wh '`$value" -ForegroundColor Green -NoNewLine'
+wh '    }'
+wh '    else {'
+wh '        Write-Host "There is no parameter being passed" -ForegroundColor Red'
+wh '    }'
+wh "}" -ForegroundColor Cyan
+wh $null
+"@
+
+function basic-param ($value) {
+    if($value) {
+        Write-Host "The parameter is " -NoNewLine 
+        Write-Host "$value" -ForegroundColor Green
+    }
+    else {
+        Write-Host "There is no parameter being passed" -ForegroundColor Red
+    }
+}
+
+split
+
+
+#Testing the Function with parameter
+invoke-expression @"
+wh "Here we are now going to call the function and pass an parameter:"
+wh "basic-param " -ForegroundColor Gray -nonewline
+wh "42" -foregroundcolor red
+"@
+
+basic-param 42
+
+pause
+
+invoke-expression @"
+wh $null
+wh "Here is another way to call the function and pass an parameter:"
+wh "basic-param " -ForegroundColor Gray -NoNewline
+wh "-value 42" -Foregroundcolor red
+"@
+
+basic-param -value 42
+
+split
+
+invoke-expression @"
+wh "Here we are now going to call the function and NOT pass an parameter:"
+wh "basic-param " -ForegroundColor Gray
+"@
+
+basic-param
+
+pause
+
+
+
+_______________________________________________________________________________________________________________________
+#3_Create_Funtion_with_Multiple_Parameters
+New-Alias -Name wh -Value Write-Host
+
+Function Pause {
+   $Message = "Press any key to continue..."
+   # Check if running in PowerShell ISE
+   
+   if ($psISE) {
+      # "ReadKey" not supported in PowerShell ISE.
+      # Show MessageBox UI
+      $Shell = New-Object -ComObject "WScript.Shell"
+      $Button = $Shell.Popup("Click 'OK' to continue.", 0, "$null", 0)
+      Return
+   }
+ 
+   $Ignore =
+      16,  # Shift (left or right)
+      17,  # Ctrl (left or right)
+      18,  # Alt (left or right)
+      20,  # Caps lock
+      91,  # Windows key (left)
+      92,  # Windows key (right)
+      93,  # Menu key
+      144, # Num lock
+      145, # Scroll lock
+      166, # Back
+      167, # Forward
+      168, # Refresh
+      169, # Stop
+      170, # Search
+      171, # Favorites
+      172, # Start/Home
+      173, # Mute
+      174, # Volume Down
+      175, # Volume Up
+      176, # Next Track
+      177, # Previous Track
+      178, # Stop Media
+      179, # Play
+      180, # Mail
+      181, # Select Media
+      182, # Application 1
+      183  # Application 2
+ 
+   #Write-Host -NoNewline $Message
+   While ($KeyInfo.VirtualKeyCode -Eq $Null -Or $Ignore -Contains $KeyInfo.VirtualKeyCode) {
+      $KeyInfo = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown")
+   }
+}
+
+Function line {
+wh $null
+wh '-------------------------------------------------------------------||'
+wh $null
+}
+
+Function Split {
+pause | Out-Null
+line
+}
+Clear-Host
+
+#Function with Parameter Syntax
+invoke-expression @"
+wh $null
+wh "To declare/create a function with an Parameter to pass, heres the syntax:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " <function name> " -ForegroundColor Gray -NoNewline
+wh "(" -ForegroundColor Cyan -NoNewLine
+wh "$<Parameter1>,$<Parameter2>" -ForegroundColor Red -NoNewLine
+wh ") " -ForegroundColor Cyan -NoNewLine
+wh "{" -ForegroundColor Cyan -NoNewline
+wh " <function code goes here> " -NoNewline
+wh "}" -ForegroundColor Cyan
+wh $null
+wh "#Note: The Parameters you are passing WILL be seperate variables when passed to the function,
+       therefore we must seperate each variable with comma (,) when creating the function"
+"@
+
+split
+
+# Creating a Function with Parameter Demo
+invoke-expression @"
+wh $null
+wh "Here's an example of an Parameter being pass to a function:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " Many-Params " -ForegroundColor Gray -NoNewline
+wh "(" -ForegroundColor Cyan -NoNewLine
+wh '`$value1,`$value2' -ForegroundColor Red -NoNewLine
+wh ") " -ForegroundColor Cyan -NoNewLine
+wh "{" -ForegroundColor Cyan -NoNewline
+wh $null
+wh '    if (`$value1 -gt `$value2) {'
+wh '        Write-Host "`$value1" -ForegroundColor Green -NoNewLine'
+wh '        Write-Host " is bigger than " -nonewline'
+wh '        Write-Host "`$value2" -ForegroundColor Red -NoNewLine'
+wh '    }'
+wh '    elseif (`$value2 -gt `$value1) {'
+wh '        Write-Host "`$value2" -ForegroundColor Red -NoNewLine'
+wh '        Write-Host " is bigger than " -nonewline'
+wh '        Write-Host "`$value1" -ForegroundColor Green -NoNewLine'
+wh '    }'
+wh '    else { return -1 }'
+wh "}" -ForegroundColor Cyan
+wh $null
+"@
+
+function Many-Params ($value1,$value2) {
+    if ($value1 -gt $value2) {
+        Write-Host "$value1" -ForegroundColor Green -NoNewLine
+        Write-Host " is bigger than " -NoNewline
+        Write-Host "$value2" -ForegroundColor Red -NoNewLine
+    }
+    elseif ($value2 -gt $value1){
+        Write-Host "$value2" -ForegroundColor Red -NoNewLine
+        Write-Host " is bigger than " -NoNewline
+        Write-Host "$value1" -ForegroundColor Green -NoNewLine
+    }
+    else { return -1 }
+}
+
+split
+
+
+#Testing the Function with Parameter
+invoke-expression @"
+wh "Here we are now going to call the function and pass an Parameter:"
+wh "Many-Params " -ForegroundColor Gray -nonewline
+wh "4 2" -foregroundcolor red
+"@
+
+Many-Params 4 2
+
+pause
+
+invoke-expression @"
+wh $null
+wh $null
+wh "Here is another way to call the function and pass an Parameter:"
+wh "Many-Params " -ForegroundColor Gray -NoNewline
+wh "-value1 6 -value2 8" -Foregroundcolor red
+"@
+
+Many-Params -value1 6 -value2 8
+
+
+split
+
+invoke-expression @"
+wh "Here we are now going the call the function and NOT pass an Parameter:"
+wh "Many-Params " -ForegroundColor Gray
+"@
+
+Many-Params
+
+pause
+
+_____________________________________________________________________________________________________________________________
+#4_Functions_with_Default_Parameter_Values
+
+New-Alias -Name wh -Value Write-Host
+
+Function Pause {
+   $Message = "Press any key to continue..."
+   # Check if running in PowerShell ISE
+   
+   if ($psISE) {
+      # "ReadKey" not supported in PowerShell ISE.
+      # Show MessageBox UI
+      $Shell = New-Object -ComObject "WScript.Shell"
+      $Button = $Shell.Popup("Click 'OK' to continue.", 0, "$null", 0)
+      Return
+   }
+ 
+   $Ignore =
+      16,  # Shift (left or right)
+      17,  # Ctrl (left or right)
+      18,  # Alt (left or right)
+      20,  # Caps lock
+      91,  # Windows key (left)
+      92,  # Windows key (right)
+      93,  # Menu key
+      144, # Num lock
+      145, # Scroll lock
+      166, # Back
+      167, # Forward
+      168, # Refresh
+      169, # Stop
+      170, # Search
+      171, # Favorites
+      172, # Start/Home
+      173, # Mute
+      174, # Volume Down
+      175, # Volume Up
+      176, # Next Track
+      177, # Previous Track
+      178, # Stop Media
+      179, # Play
+      180, # Mail
+      181, # Select Media
+      182, # Application 1
+      183  # Application 2
+ 
+   #Write-Host -NoNewline $Message
+   While ($KeyInfo.VirtualKeyCode -Eq $Null -Or $Ignore -Contains $KeyInfo.VirtualKeyCode) {
+      $KeyInfo = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown")
+   }
+}
+
+Function line {
+wh $null
+wh '-------------------------------------------------------------------||'
+wh $null
+}
+
+Function Split {
+pause | Out-Null
+line
+}
+Clear-Host
+
+invoke-expression @"
+wh $null
+wh "To declare/create a function that contains Default Values, heres the syntax:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " <function name> " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan
+wh "    param(" -ForegroundColor Cyan
+wh '      `$Parameter1=`''<Default Value>`'',`$Parameter2=`''<Default Value>`''' -ForegroundColor Red
+wh "    )"   -ForegroundColor Cyan
+wh '     <function code>'
+wh "}" -ForegroundColor Cyan
+wh $null
+wh "Whenever we assign a default value to a Parameter, if the parameter is never given when the function
+gets called, then the default value gets assigned. However, if you do provide an argument to the parameter,
+then the parameter gets overwritten by that argument's value"
+"@
+
+split
+
+invoke-expression @"
+wh $null
+wh "Here's a function whose Parameters contains Default Values:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " Default-Params " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan
+wh "    param(" -ForegroundColor Cyan
+wh '      `$Parameter1=`''90`'',`$Parameter2=`''65535`''' -ForegroundColor Red
+wh "    )"   -ForegroundColor Cyan
+wh '       `"The Parameters passed are `$Parameter1`' -NoNewLine
+wh ' and `$Parameter2`"'
+wh "}" -ForegroundColor Cyan
+"@
+
+function Default-Params {
+    param(
+        $Parameter1='90',$Parameter2='65535'
+    )
+    "The Parameters passed are $Parameter1 and $Parameter2"
+}
+
+split
+
+#Testing the Function with Default Parameters
+invoke-expression @"
+wh "Here we are now going to call the function without providing a Parameter:"
+wh "Default-Params " -ForegroundColor Gray
+"@
+
+Default-Params
+
+split
+
+invoke-expression @"
+wh "And here we are providing a Parameters to the function:"
+wh "Default-Params " -ForegroundColor Gray -NoNewLine
+wh "3389 445" -foregroundcolor red
+"@
+
+Default-Params 3389 445
+
+pause
+______________________________________________________________________________________________________________________________________________
+
+
+#5_Functions_with_Switch_Parameters
+
+New-Alias -Name wh -Value Write-Host
+
+Function Pause {
+   $Message = "Press any key to continue..."
+   # Check if running in PowerShell ISE
+   
+   if ($psISE) {
+      # "ReadKey" not supported in PowerShell ISE.
+      # Show MessageBox UI
+      $Shell = New-Object -ComObject "WScript.Shell"
+      $Button = $Shell.Popup("Click 'OK' to continue.", 0, "$null", 0)
+      Return
+   }
+ 
+   $Ignore =
+      16,  # Shift (left or right)
+      17,  # Ctrl (left or right)
+      18,  # Alt (left or right)
+      20,  # Caps lock
+      91,  # Windows key (left)
+      92,  # Windows key (right)
+      93,  # Menu key
+      144, # Num lock
+      145, # Scroll lock
+      166, # Back
+      167, # Forward
+      168, # Refresh
+      169, # Stop
+      170, # Search
+      171, # Favorites
+      172, # Start/Home
+      173, # Mute
+      174, # Volume Down
+      175, # Volume Up
+      176, # Next Track
+      177, # Previous Track
+      178, # Stop Media
+      179, # Play
+      180, # Mail
+      181, # Select Media
+      182, # Application 1
+      183  # Application 2
+ 
+   #Write-Host -NoNewline $Message
+   While ($KeyInfo.VirtualKeyCode -Eq $Null -Or $Ignore -Contains $KeyInfo.VirtualKeyCode) {
+      $KeyInfo = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown")
+   }
+}
+
+Function line {
+wh $null
+wh '-------------------------------------------------------------------||'
+wh $null
+}
+
+Function Split {
+pause | Out-Null
+line
+}
+Clear-Host
+
+#Function with Switch Parameter Syntax
+invoke-expression @"
+wh $null
+wh "To declare/create a function that contains Switch Parameter, heres the syntax:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " <function name> " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan
+wh "    param(" -ForegroundColor Cyan
+wh '      [Switch]' -ForegroundColor Red
+wh '      `$SwitchParam' -ForegroundColor Red
+wh "    )"   -ForegroundColor Cyan
+wh '     <function code>'
+wh "}" -ForegroundColor Cyan
+wh $null
+wh "Note: A Switch Parameter operates based off Boolean Logic."
+wh "      -Either the switch is active or its off "
+"@
+
+split
+
+#Creating a Function with a Switch Parameter
+invoke-expression @"
+wh $null
+wh "Heres a function that contains Switch Parameter:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " Nintendo-Switch " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan
+wh "    param(" -ForegroundColor Cyan
+wh '      [Switch]' -ForegroundColor Red
+wh '      `$SwitchPro' -ForegroundColor Red
+wh "    )"   -ForegroundColor Cyan
+wh '    if (`$SwitchPro) {'
+wh '        Write-Host "Switch is Activated"'
+wh '        Write-Host "SwitchPro research initiated"'
+wh '    }'
+wh '    else {'
+wh '        Write-Host "Switch is off"'
+wh '        Write-Host "SwitchPro never coming"'
+wh '    }'
+wh "}" -ForegroundColor Cyan
+wh $null
+"@
+
+function Nintendo-Switch {
+    param(
+        [Switch]
+        $SwitchPro
+    )
+
+    if ($SwitchPro) {
+        'Switch is Activated'
+        'SwitchPro research initiated'
+    }
+    else {
+        'Switch is off'
+        'SwitchPro never coming'
+    }
+}
+
+split
+
+#Function with a Switch Parameter Demos
+
+Invoke-Expression @"
+wh "Here we are now calling the function without the Switch Parameter being selected:"
+wh "Nintendo-Switch " -ForegroundColor Gray
+"@
+
+Nintendo-Switch
+
+split
+
+Invoke-Expression @"
+wh "Here we are now calling the function without the Switch Parameter being selected:"
+wh "Nintendo-Switch " -ForegroundColor Gray -NoNewLine
+wh "-SwitchPro" -ForegroundColor Red
+"@
+
+Nintendo-Switch -SwitchPro
+
+pause
+
+_______________________________________________________________________________________________________________________________________________
+
+
+#6_Advance_Functions-Mandatory_Parameters
+
+New-Alias -Name wh -Value Write-Host
+
+Function Pause {
+   $Message = "Press any key to continue..."
+   # Check if running in PowerShell ISE
+   
+   if ($psISE) {
+      # "ReadKey" not supported in PowerShell ISE.
+      # Show MessageBox UI
+      $Shell = New-Object -ComObject "WScript.Shell"
+      $Button = $Shell.Popup("Click 'OK' to continue.", 0, "$null", 0)
+      Return
+   }
+ 
+   $Ignore =
+      16,  # Shift (left or right)
+      17,  # Ctrl (left or right)
+      18,  # Alt (left or right)
+      20,  # Caps lock
+      91,  # Windows key (left)
+      92,  # Windows key (right)
+      93,  # Menu key
+      144, # Num lock
+      145, # Scroll lock
+      166, # Back
+      167, # Forward
+      168, # Refresh
+      169, # Stop
+      170, # Search
+      171, # Favorites
+      172, # Start/Home
+      173, # Mute
+      174, # Volume Down
+      175, # Volume Up
+      176, # Next Track
+      177, # Previous Track
+      178, # Stop Media
+      179, # Play
+      180, # Mail
+      181, # Select Media
+      182, # Application 1
+      183  # Application 2
+ 
+   #Write-Host -NoNewline $Message
+   While ($KeyInfo.VirtualKeyCode -Eq $Null -Or $Ignore -Contains $KeyInfo.VirtualKeyCode) {
+      $KeyInfo = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown")
+   }
+}
+
+Function line {
+wh $null
+wh '-------------------------------------------------------------------||'
+wh $null
+}
+
+Function Split {
+pause | Out-Null
+line
+}
+Clear-Host
+
+#Syntax to create a function with a Mandatory Parameter
+invoke-expression @"
+wh $null
+wh "To declare/create a function that contains a Mandatory Parameter, heres the syntax:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " <function name> " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan
+wh "    param(" -ForegroundColor Cyan
+wh '        [' -ForegroundColor DarkRed -NoNewLine; wh 'Parameter' -ForegroundColor DarkGray -NoNewLine  ; wh '(' -NoNewLine ; wh 'Mandatory=' -ForegroundColor Green -NoNewLine ; wh '`$true' -ForegroundColor Red -NoNewLine ; wh ')' -NoNewLine ; wh ']' -ForegroundColor DarkRed 
+wh '                `#The `"Mandatory=`$true`" forces the function to request a parameter if no Argument was specified when calling the function'
+wh '        `$param' -Foregroundcolor Red
+wh '    )' -ForegroundColor Cyan
+wh $null
+wh '    <function code goes here>'
+wh $null
+wh '}'
+"@
+
+split
+
+#Creating a function with a Mandatory Parameter
+invoke-expression @"
+wh 'Now heres a function that has a Mandatory Parameter'
+wh $null
+wh "function" -ForegroundColor Green -NoNewline
+wh " Mando-Params " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan
+wh "    param(" -ForegroundColor Cyan
+wh '        [' -ForegroundColor DarkRed -NoNewLine; wh 'Parameter' -ForegroundColor DarkGray -NoNewLine  ; wh '(' -NoNewLine ; wh 'Mandatory=' -ForegroundColor Green -NoNewLine ; wh '`$true' -ForegroundColor Red -NoNewLine ; wh ')' -NoNewLine ; wh ']' -ForegroundColor DarkRed 
+wh '        `$param' -Foregroundcolor Red
+wh '    )' -ForegroundColor Cyan
+wh $null
+wh '    "The argument ```"`$param```" was mandatory for the parameter"'
+wh $null
+wh '}'
+wh $null
+"@
+
+function Mando-Params {
+    param (
+        [Parameter(Mandatory=$true)]
+                  #The 'Mandatory=$true' forces the function to request a parameter if no Argument was specified when calling the function
+        $param
+    )
+
+   # The While  Loop is checking to see if a $null argument is being passed to the Parameter
+  
+ "The argument `"$param`" was mandatory for the parameter"
+
+
+}
+
+split
+
+#Calling the Mando-Params Function
+Invoke-Expression @"
+wh 'Now we are going to call the Function Mando-Params.'
+wh 'However we are not going to provide an argument.' 
+wh $null
+wh 'mando-params' -foregroundcolor green
+sleep 1
+wh 'cmdlet Mando-Params at command pipeline position 1'
+wh 'Supply values for the following parameters:'
+wh 'param: ' -nonewline ; pause
+wh $null ; wh $null
+wh '`#`#`# What happened??'
+wh $null
+"@
+
+split
+
+#Updating the function Mando-Params with a While Loop in the code
+invoke-expression @"
+wh 'Lets update Mando-Params to where it will always ask for input if it detects an empty parameter'
+wh $null
+wh "function" -ForegroundColor Green -NoNewline
+wh " Mando-Params " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan
+wh "    param(" -ForegroundColor Cyan
+wh '        [' -ForegroundColor DarkRed -NoNewLine; wh 'Parameter' -ForegroundColor DarkGray -NoNewLine  ; wh '(' -NoNewLine ; wh 'Mandatory=' -ForegroundColor Green -NoNewLine ; wh '`$true' -ForegroundColor Red -NoNewLine ; wh ')' -NoNewLine ; wh ']' -ForegroundColor DarkRed 
+wh '        `$param' -Foregroundcolor Red
+wh '    )' -ForegroundColor Cyan
+wh $null
+wh '    while '-ForegroundColor Cyan -NoNewLine ; wh '(' -NoNewLine ;  wh '[string]::' -Foregroundcolor DarkGray -NoNewLine ; wh 'IsNullOrWhiteSpace(' -ForegroundColor Green -NoNewLine ; wh '`$param' -ForegroundColor Red -NoNewLine ; wh ')' -ForegroundColor Green -NoNewLine ; wh ') {'
+wh '        `$param = ' -ForegroundColor Red -NoNewLine ; wh 'read-host ' -ForegroundColor yellow -NoNewLine ; wh '-Prompt ' -ForegroundColor DarkGray -NoNewLine ; wh '"Enter a string"' 
+wh '        #If the Parameter is Null/Empty, it will prompt for a string until a character(s) is entered'
+wh '    }'
+wh $null
+wh '    "The argument ```"`$param```" was mandatory for the parameter"'
+wh $null
+wh '}'
+wh $null
+"@
+
+function Mando-Params {
+    param (
+        [Parameter(Mandatory=$true)]
+                  #The 'Mandatory=$true' forces the function to request a parameter if no Argument was specified when calling the function
+        $param
+    )
+
+   # The While  Loop is checking to see if a $null argument is being passed to the Parameter
+    while ([string]::IsNullOrWhiteSpace($param)) {
+        $param= read-host -Prompt "Enter a string"
+        #If the Parameter is Null/Empty, it will prompt for a string until a character(s) is entered
+    }
+  
+ "The argument `"$param`" was mandatory for the parameter"
+
+
+}
+
+split
+
+#Calling the updated Mando-Params Function
+Invoke-Expression @"
+wh 'Now we are going to call the Updated Mando-Params Function.'
+wh 'However we are still not going to provide an argument.' 
+wh $null
+wh 'mando-params' -foregroundcolor green
+sleep 1
+wh 'cmdlet Mando-Params at command pipeline position 1'
+wh 'Supply values for the following parameters:'
+wh 'param: ' ; pause
+wh 'Enter a string: ' ; pause
+wh 'Enter a string: ' ; pause
+wh 'Enter a string: ' ; pause
+wh 'Enter a string: ' ; pause
+wh 'Enter a string: ' -nonewline ; pause ; wh 'a' -NoNewLine ; pause
+wh $null ;
+wh 'The argument `"a`" was mandatory for the parameter'
+wh $null ; wh $null
+wh '`#`#`# What was happening??'
+wh $null
+"@
+
+pause
+
+____________________________________________________________________________________________________________________________
+
+
+#7_Advance_Functions-Help_Messages
+
+New-Alias -Name wh -Value Write-Host
+
+Function Pause {
+   $Message = "Press any key to continue..."
+   # Check if running in PowerShell ISE
+   
+   if ($psISE) {
+      # "ReadKey" not supported in PowerShell ISE.
+      # Show MessageBox UI
+      $Shell = New-Object -ComObject "WScript.Shell"
+      $Button = $Shell.Popup("Click 'OK' to continue.", 0, "$null", 0)
+      Return
+   }
+ 
+   $Ignore =
+      16,  # Shift (left or right)
+      17,  # Ctrl (left or right)
+      18,  # Alt (left or right)
+      20,  # Caps lock
+      91,  # Windows key (left)
+      92,  # Windows key (right)
+      93,  # Menu key
+      144, # Num lock
+      145, # Scroll lock
+      166, # Back
+      167, # Forward
+      168, # Refresh
+      169, # Stop
+      170, # Search
+      171, # Favorites
+      172, # Start/Home
+      173, # Mute
+      174, # Volume Down
+      175, # Volume Up
+      176, # Next Track
+      177, # Previous Track
+      178, # Stop Media
+      179, # Play
+      180, # Mail
+      181, # Select Media
+      182, # Application 1
+      183  # Application 2
+ 
+   #Write-Host -NoNewline $Message
+   While ($KeyInfo.VirtualKeyCode -Eq $Null -Or $Ignore -Contains $KeyInfo.VirtualKeyCode) {
+      $KeyInfo = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown")
+   }
+}
+
+Function line {
+wh $null
+wh '-------------------------------------------------------------------||'
+wh $null
+}
+
+Function Split {
+pause | Out-Null
+line
+}
+Clear-Host
+
+#Syntax to create a function with a Parameter Help Message
+invoke-expression @"
+wh $null
+wh "To declare/create a function that contains a Mandatory Parameter, heres the syntax:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " <function name> " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan
+wh "    param(" -ForegroundColor Cyan
+wh '        [' -ForegroundColor DarkRed -NoNewLine; wh 'Parameter' -ForegroundColor DarkGray -NoNewLine  ; wh '(' -NoNewLine ; wh 'Mandatory=`$true' -ForegroundColor Red -NoNewLine ; wh ',' -NoNewLine ; wh 'HelpMessage=<message>' -ForegroundColor Green -NoNewLine ; wh ')' -NoNewLine ; wh ']' -ForegroundColor DarkRed 
+wh '                `# The `'HelpMessage=<message>`' will display the message once the user types "!?" when requesting the mandatory parameter'
+wh '        `$param' -Foregroundcolor Red
+wh '    )' -ForegroundColor Cyan
+wh $null
+wh '    <function code goes here>'
+wh $null
+wh '}'
+"@
+
+split
+
+#Creating a function with a Parameter Help Message
+invoke-expression @"
+wh 'Now heres a function that has a Mandatory Parameter'
+wh $null
+wh "function" -ForegroundColor Green -NoNewline
+wh " Help-Params " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan
+wh "    param(" -ForegroundColor Cyan
+wh '        [' -ForegroundColor DarkRed -NoNewLine; wh 'Parameter' -ForegroundColor DarkGray -NoNewLine  ; wh '(' -NoNewLine ; wh 'Mandatory=`$true,' -ForegroundColor Red -NoNewLine ;  wh 'HelpMessage="Enter an Integer"' -Foregroundcolor Green -NoNewLine ; wh ')' -NoNewLine ;wh ']' -ForegroundColor DarkRed 
+wh '        `[int]`$param' -Foregroundcolor Red
+wh '    )' -ForegroundColor Cyan
+wh $null
+wh '    "The argument ```"`$param```" was mandatory for the parameter"'
+wh $null
+wh '}'
+wh $null
+"@
+
+function Help-Params {
+    param (
+        [Parameter(Mandatory=$true, HelpMessage='Enter an Integer')]
+                    # The 'HelpMessage='<message>' will display the message once the user types '!?' when requesting the mandatory parameter
+        [Int]$param
+    )
+
+    "The argument `"$param`" was mandatory for the parameter"
+
+}
+
+split
+
+#Calling the Help-Params Function
+Invoke-Expression @"
+wh 'Now we are going to call the Function Help-Params.'
+wh 'However we are not going to provide an argument.' 
+wh $null
+wh 'Help-Params' -foregroundcolor green
+sleep 1
+wh 'cmdlet Help-Params at command pipeline position 1'
+wh 'Supply values for the following parameters:'
+wh '(Type !? for Help.)'
+wh 'param: ' -nonewline ; pause ; wh '!' -Nonewline ; sleep -milliseconds 250 ; wh '?' -NoNewline; pause
+wh $null
+wh 'Enter an Integer'
+wh 'param: ' -NoNewLine ; pause ; wh '2' -NoNewLine; pause
+wh $null
+wh 'The argument `"2`" was mandatory for the parameter'
+wh $null
+wh '`#`#`# What happened??'
+wh $null
+"@
+
+pause
+
+__________________________________________________________________________________________________________________
+
+
+
+
+function Positional-Params {
+    param(
+        [Parameter(Mandatory=$true,Position=0)]
+        [int]
+        $number,
+        [Parameter(Mandatory=$true,Position=1)]
+        [string]
+        $string,
+        [Parameter(Mandatory=$true,Position=2)]
+        [string]
+        $anotherstring
+        )
+        
+        Write-Output "$number is the first positional parameter"
+        Write-Output "$String is the second positional parameter"
+        Write-Output "$anotherstring is the third positional parameter"
+
+}
+#Running with No Parameters
+<#
+Command: 
+Positional-Params
+
+----------------------------
+
+Result:
+cmdlet Positional-Params at command pipeline position 1
+Supply values for the following parameters:
+number: <entered '1'>
+string: <entered 'ballons'>
+anotherstring: <entered 'five'>
+1 is the first positional parameter
+ballons is the second positional parameter
+five is the third positional parameter
+#>
+
+#Running with One Parameter Declared and Two undeclared
+<#
+Command: 
+Positional-Params -string "balloons" 1 "five"
+
+--------------------------------------------------
+Result:
+1 is the first positional parameter
+balloons is the second positional parameter
+five is the third positional parameter
+#>
+
+#Running with wrong Parameter types Declared
+<#
+Command:
+Positional-Params "balloons" 1 "five"
+
+----------------------------------------------
+
+Result:
+Positional-Params : Cannot process argument transformation on parameter 'number'. Cannot convert value "balloons" to type 
+"System.Int32". Error: "Input string was not in a correct format."
+At line:1 char:19
++ Positional-Params "balloons" 1 "five"
++                   ~~~~~~~~~~
+    + CategoryInfo          : InvalidData: (:) [Positional-Params], ParameterBindingArgumentTransformationException
+    + FullyQualifiedErrorId : ParameterArgumentTransformationError,Positional-Params
+#>
+
+function Param-Sets {
+[CmdletBinding(DefaultParameterSetName='Tacos')]
+    param(
+        [Parameter(ParameterSetName="Tacos",Position=0,Mandatory=$true)]
+        $flavor,
+        [Parameter(ParameterSetName="Tacos",Mandatory=$true)]
+        $cheese,
+        [Parameter(ParameterSetName="Tacos",Mandatory=$true)]
+        $spice,
+        [Parameter(ParameterSetName="Burritos",Mandatory=$true)]
+        $beans,
+        [Parameter(ParameterSetName="Burritos",Mandatory=$true)]
+        $rice
+        )
+
+        $ParameterSetName = $PSCmdlet.ParameterSetName
+        "The $ParameterSetName Parameter Set was utilized"
+
+}
+#Running without declaring any Parameters
+<#
+Command:
+Param-Sets
+
+---------------------------------------
+
+Result:
+cmdlet Param-Sets at command pipeline position 1
+Supply values for the following parameters:
+flavor: beef
+cheese: "all of it"
+spice: death
+The Tacos Parameter Set was utilized
+#>
+
+#Running while declaring a parameter not part of the DefaultParameterSet
+<#
+Command:
+Param-Sets -beans "blackeyepeas" -rice "dirty"
+
+---------------------------------------
+
+Result:
+
+The Burritos Parameter Set was utilized
+#>
+
+function Function-Blocks {
+[CmdletBinding()]
+    param()
+
+    Begin { 
+            <#
+            -This block is used to provide optional one-time preprocessing for the function
+            -Does whatever is in here prior to anything else in the function 
+            #>
+    }
+    
+    Process {
+            <# 
+            -This block is used to provide record-by-record processing for the function.
+            -Executes code as many times as necessary based off of how many objects are sent to the function through PowerShell pipeline
+            ---Can use '$_' to grab the individual values passed to the function without having to call on $input or $args
+            #>
+    }
+    
+    End { 
+         <# 
+         -This block is used to provide optional one-time post-processing for the function
+         -Executes this code at the end of the function prior to exiting the function
+         #>
+    }
+
+}
+
+________________________________________________________________________________________________________________________________
+
