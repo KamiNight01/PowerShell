@@ -154,3 +154,153 @@ wh "Hello-World" -ForegroundColor Cyan
 Get-Content function:Hello-World
 
 pause
+
+____________________________________________________________________________________________________________________________________________________________
+
+
+#2_Create_Funtion_with_an_parameter
+New-Alias -Name wh -Value Write-Host
+
+Function Pause {
+   $Message = "Press any key to continue..."
+   # Check if running in PowerShell ISE
+   
+   if ($psISE) {
+      # "ReadKey" not supported in PowerShell ISE.
+      # Show MessageBox UI
+      $Shell = New-Object -ComObject "WScript.Shell"
+      $Button = $Shell.Popup("Click 'OK' to continue.", 0, "$null", 0)
+      Return
+   }
+ 
+   $Ignore =
+      16,  # Shift (left or right)
+      17,  # Ctrl (left or right)
+      18,  # Alt (left or right)
+      20,  # Caps lock
+      91,  # Windows key (left)
+      92,  # Windows key (right)
+      93,  # Menu key
+      144, # Num lock
+      145, # Scroll lock
+      166, # Back
+      167, # Forward
+      168, # Refresh
+      169, # Stop
+      170, # Search
+      171, # Favorites
+      172, # Start/Home
+      173, # Mute
+      174, # Volume Down
+      175, # Volume Up
+      176, # Next Track
+      177, # Previous Track
+      178, # Stop Media
+      179, # Play
+      180, # Mail
+      181, # Select Media
+      182, # Application 1
+      183  # Application 2
+ 
+   #Write-Host -NoNewline $Message
+   While ($KeyInfo.VirtualKeyCode -Eq $Null -Or $Ignore -Contains $KeyInfo.VirtualKeyCode) {
+      $KeyInfo = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown")
+   }
+}
+
+Function line {
+wh $null
+wh '-------------------------------------------------------------------||'
+wh $null
+}
+
+Function Split {
+pause | Out-Null
+line
+}
+Clear-Host
+
+#Function with parameter Syntax
+invoke-expression @"
+wh $null
+wh "To declare/create a function with an parameter to pass, heres the syntax:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " <function name> " -ForegroundColor Gray -NoNewline
+wh "(" -ForegroundColor Cyan -NoNewLine
+wh "$<parameter name>" -ForegroundColor Red -NoNewLine
+wh ") " -ForegroundColor Cyan -NoNewLine
+wh "{" -ForegroundColor Cyan -NoNewline
+wh " <function code goes here> " -NoNewline
+wh "}" -ForegroundColor Cyan
+wh $null
+wh "#Note: The parameter you would be passing WILL be a variable when passed to the function,
+       therefore we must declare it as a variable when creating the function"
+"@
+
+split
+
+# Creating a Function with parameter Demo
+invoke-expression @"
+wh $null
+wh "Here's an example of an parameter being pass to a function:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " basic-param " -ForegroundColor Gray -NoNewline
+wh "(" -ForegroundColor Cyan -NoNewLine
+wh '`$value' -ForegroundColor Red -NoNewLine
+wh ") " -ForegroundColor Cyan -NoNewLine
+wh "{" -ForegroundColor Cyan -NoNewline
+wh $null
+wh '    if (`$value) {'
+wh '        Write-Host "The parameter is ' -NoNewLine
+wh '`$value" -ForegroundColor Green -NoNewLine'
+wh '    }'
+wh '    else {'
+wh '        Write-Host "There is no parameter being passed" -ForegroundColor Red'
+wh '    }'
+wh "}" -ForegroundColor Cyan
+wh $null
+"@
+
+function basic-param ($value) {
+    if($value) {
+        Write-Host "The parameter is " -NoNewLine 
+        Write-Host "$value" -ForegroundColor Green
+    }
+    else {
+        Write-Host "There is no parameter being passed" -ForegroundColor Red
+    }
+}
+
+split
+
+
+#Testing the Function with parameter
+invoke-expression @"
+wh "Here we are now going to call the function and pass an parameter:"
+wh "basic-param " -ForegroundColor Gray -nonewline
+wh "42" -foregroundcolor red
+"@
+
+basic-param 42
+
+pause
+
+invoke-expression @"
+wh $null
+wh "Here is another way to call the function and pass an parameter:"
+wh "basic-param " -ForegroundColor Gray -NoNewline
+wh "-value 42" -Foregroundcolor red
+"@
+
+basic-param -value 42
+
+split
+
+invoke-expression @"
+wh "Here we are now going to call the function and NOT pass an parameter:"
+wh "basic-param " -ForegroundColor Gray
+"@
+
+basic-param
+
+pause
