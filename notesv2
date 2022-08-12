@@ -1,0 +1,4 @@
+$_   ==  pipeline involved use $_ 
+$args === array of undeclared parameters that have been passed to the function use $args instead if you dont use #param ( 
+$input = enumerates a list of all the paramaeters that was passed to it so if you have spoemthing that ask for a input but they dont give you a function virable just do $input
+(if it involes a process block then you might be using $input)
