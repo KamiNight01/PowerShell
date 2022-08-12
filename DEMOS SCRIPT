@@ -1,0 +1,156 @@
+# Create Functions
+
+New-Alias -Name wh -Value Write-Host
+
+Function Pause {
+   $Message = "Press any key to continue..."
+   # Check if running in PowerShell ISE
+   
+   if ($psISE) {
+      # "ReadKey" not supported in PowerShell ISE.
+      # Show MessageBox UI
+      $Shell = New-Object -ComObject "WScript.Shell"
+      $Button = $Shell.Popup("Click 'OK' to continue.", 0, "$null", 0)
+      Return
+   }
+ 
+   $Ignore =
+      16,  # Shift (left or right)
+      17,  # Ctrl (left or right)
+      18,  # Alt (left or right)
+      20,  # Caps lock
+      91,  # Windows key (left)
+      92,  # Windows key (right)
+      93,  # Menu key
+      144, # Num lock
+      145, # Scroll lock
+      166, # Back
+      167, # Forward
+      168, # Refresh
+      169, # Stop
+      170, # Search
+      171, # Favorites
+      172, # Start/Home
+      173, # Mute
+      174, # Volume Down
+      175, # Volume Up
+      176, # Next Track
+      177, # Previous Track
+      178, # Stop Media
+      179, # Play
+      180, # Mail
+      181, # Select Media
+      182, # Application 1
+      183  # Application 2
+ 
+   #Write-Host -NoNewline $Message
+   While ($KeyInfo.VirtualKeyCode -Eq $Null -Or $Ignore -Contains $KeyInfo.VirtualKeyCode) {
+      $KeyInfo = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown")
+   }
+}
+
+Function line {
+wh $null
+wh '-------------------------------------------------------------------||'
+wh $null
+}
+
+Function Split {
+pause | Out-Null
+line
+}
+Clear-Host
+
+
+#Blank Function Syntax
+invoke-expression @"
+wh $null
+wh "To declare/create a basic function, the syntax is as followed:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " <function name> " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan -NoNewline
+wh " <function code goes here> " -NoNewline
+wh "}" -ForegroundColor Cyan
+"@
+
+split
+
+#Hello-World function demos
+invoke-expression @"
+wh "Here is a function for a 'Hello World' message as a 'one-liner':"
+wh "function" -ForegroundColor Green -NoNewline
+wh " Hello-World " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan -NoNewline
+wh " 'Hello World!!!' " -NoNewline
+wh "}" -ForegroundColor Cyan
+"@
+
+split
+
+invoke-expression @"
+wh "Here is another way to write the 'Hello World' function:"
+wh "function" -ForegroundColor Green -NoNewline
+wh " Hello-World " -ForegroundColor Gray -NoNewline
+wh "{" -ForegroundColor Cyan -NoNewline
+wh $null
+wh "'Hello World!!!' " -NoNewline
+wh $null
+wh "}" -ForegroundColor Cyan
+"@
+
+function Hello-World { 
+    'Hello-World!!!'
+}
+
+split
+
+#Calling the Hello-World function
+wh "How to call the function we just created"
+wh "Hello-World" -ForegroundColor Gray
+Hello-World
+
+split
+
+#How to view a created function in PowerShell
+wh "When a function is delared, it only exists for that individual PowerShell Session/Script"
+Wh "So where are functions stored in PowerShell???"
+
+pause
+
+wh $null
+wh "Functions are stored within the 'function' PSDrive" 
+wh "-Since they are in a PSDrive, we can list what functions are in PowerShell"
+wh $null
+pause
+wh "To view all the functions in the PS Session, we can perform the following:"
+invoke-expression @"
+wh "Get-ChildItem" -ForegroundColor Green -NoNewline
+wh " function:" -ForegroundColor Gray -NoNewline
+wh "`*" -ForegroundColor Cyan
+"@
+wh $null
+pause
+
+Get-ChildItem function:*
+
+pause
+
+wh $null
+wh "If we have the ablility to list functions, do we have the ability to view what they do?"
+
+pause
+
+wh $null
+wh "We can view individual functions and what they are programmed to do"
+wh "-In this case, we will be looking at our 'Hello-World' function that we created"
+wh $null
+
+invoke-expression @"
+wh "Here is the expression we utilize to look at the 'Hello-World' function"
+wh "Get-Content" -ForegroundColor Green -NoNewline
+wh " function:" -ForegroundColor Gray -NoNewline
+wh "Hello-World" -ForegroundColor Cyan
+"@
+Get-Content function:Hello-World
+
+pause
