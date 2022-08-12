@@ -95,7 +95,7 @@ function q10 ($filepath,$lasthash) {
 }
 
 
-
+_______________________________________________________________________________________________________________________________________________________
 <# 1 #>
 function q1($var1,$var2,$var3,$var4) {
     <# Return the product of the arguments #>
@@ -444,5 +444,7 @@ function q10 ($filepath,$lasthash) {
     return (get-filehash $filepath).Hash -ne $lasthash
 
 }
+
+
 
 
