@@ -550,47 +550,591 @@ function weightedboi {
 
 __________________________________________________________________________________________________________________
 
-ACTIVITY 12:
+__________________________________________________________________________________________________________________________________________________________________
+
+# Activity #12: Advance Function Parameters
+
+# Create an advanced function using Begin, Process, and End, that takes two(2) arguments. 
+# The first argument being an array of at least ten(10) integers and the second argument being a single integer. 
+# Search the array argument for every occurrence of the single integer argument then return the sum of all elements in 
+# the array excluding every occurrence of the single integer argument.
+#
+# Example:
+#         PS> Get-MultiSums @(1,2,3,4,5,6,7,8,9,10) 5
+#         50
+
 <#
-Create an advanced function using Begin, Process, and End, that takes 
-two(2) arguments. The first argument being an array of at least ten(10)
-integers and the second argument being a single integer. Search the array argument for every occurrence
-of the single integer argument then return the sum of all elements
-in the array excluding every occurrence 
-of the single integer argument
-PS> get-multisum @(1,2,3,4,5,6,7,8,9,10) 5
-50
-
-function Find-sums ([array]$array,[int]$nums) {
-Begin {
-        sum = 0
+function Find-Sums ([array]$array, [int]$nums) {
+    Begin {
+          $sum = 0
     }
-    process {
-    ForEach ($numb in $array) {
-        if ($numb - ne $nums) {
-            $sums = $sum+$numb
-
+    Process {        
+        ForEach ($numb in $array) {
+            if ($numb -ne $nums) {
+                 $sum = $sum+$numb
             }
-         }
+        }
     }
-End {
-        write-host $sum
+    End {
+             Write-Host $sum
     }
 }
+find-sums @(1,2,3,4,5,6,7,8,9,10) 5
+#>
+
+# -OR-
+# Checks to see if the array has at least 10 values and that the number to skip is in the array
+<#
+function Find-Sums ([array]$array, [int]$nums) {
+    Begin {
+          $sum= 0
+    }
+    Process {
+        while ($array.count -lt 10 ) {
+            [int]$more = read-host -prompt "Enter an integer"
+            $array += $more
+            }
+        if ($array -notcontains $nums) {
+            throw "Enter an integer within the array"
+        }           
+        ForEach ($numb in $array) {
+            if ($numb -ne $nums) {
+                 $sum = $sum+$numb
+            }
+        }
+
+    }
+    End {           
+            Write-Host $sum
+        }
+    }
+find-sums @(1,2,3,4,5,6,7) 1
+#>
+
+# Create an advanced function using Begin, Process, End, that prompts the user to enter the names of three(3) U.S. States 
+# then returns the names of the states in the order of longest name to shortest name and the amount of characters in each name.
+#
+# Example:
+#         PS> Get-LongestName
+#         Georgia: 7
+#         Idaho: 5
+#         Utah: 4
 
 
+#Using an Array to hold the values
+<#
+function Get-StateNameLength {
+    #param ($a,$b,$c)
+    Begin {
+        $a = Read-Host "Enter a State name"
+        $b = Read-Host "Enter a second State name"
+        $c = Read-Host "Enter a third State name"
+        $statearray=(@($a;$b;$c) | sort {$_.length} -Descending)
+    }
+    Process {
+        foreach ($state in $statearray){
+            $len= $state.Length
+            Write-Output ""$state": $len"
+        }
+    }
+}
+#>
+
+# -OR-
+# Using a Hash Table to store the Values
+<#
+function states ($st1,$st2,$st3){
+    BEGIN {
+        if ([string]::IsNullOrEmpty($st1)) {
+            $st1 = Read-Host 'First State '
+        }
+        if ([string]::IsNullOrEmpty($st2)) {
+            $st2 = Read-Host 'Second State '
+        }
+        if ([string]::IsNullOrEmpty($st3)) {
+            $st3 = Read-Host 'Third State '
+        }
+        #$stl1 = $st1.Length 
+        #$stl2 = $st2.Length
+        #$stl3 = $st3.Length
+    }
+    PROCESS{
+        $states = @{ $st1 = $st1.length; $st2 = $st2.Length; $st3 = $st3.Length}
+        #$states = @{ $st1 = $stl1; $st2 = $stl2; $st3 = $stl3}
+    }
+    END { 
+        $states.GetEnumerator() | sort -Property Value -Descending | Format-Table -HideTableHeaders 
+    }
+}
+#>
+
+# -OR-
+# Using a VBScript Pop-up
+<#
+function USState-Lengths {
+    Begin {
+        $counter=1
+        $US_States= @()
+          }
+    Process {
+             while ($counter -ge 1 -and $counter -le 3)
+                   {
+                       [void][Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
+                            $title = "Choose a US State"
+                            $msg = "Enter your US State #${counter}:"
+                            $text = [Microsoft.VisualBasic.Interaction]::InputBox($msg, $title)
+                       $US_State=$text
+                       $US_States += $US_State 
+                       $counter +=1
+                   }
+             foreach ($state in $US_States) {
+                if ($state.length -eq 0) {
+                        throw 'Unable to accept a value of $null. Re-run function and enter a US State(s)'
+                        }
+                }
+            }
+    End {
+        $Order= $US_States | Sort-Object -Property Length -Descending
+             foreach ($state in $Order) 
+                    {
+                        Write-Host ${state}:  ${state}.Length
+                    }
+        }
+}
+
+USState-Lengths
+#>
+
+______________________________________________________________________________________________________________________________________________________________
+# Activity #11: Function Parameters
+
+# Create a function that takes two (2) integer values, '$a' and '$b', that are the lengths of two (2) legs
+# of a right triangle and returns the hypotenuse
+#
+# Use the Pythagorean Theorem of (a^2 + b^2 = c^2) to find the value of the hypotenuse
+
+<#
+function Find-Hypotenuse($a,$b) {
+    $c2= ($a * $a) + ($b * $b)  
+    [math]::Sqrt($c2)
+    }
+#>
+
+# -OR-
+# Validates sides are entered and are not blank/null
+<#
+function Find-Hypotenuse {
+    param (
+        [parameter(mandatory=$true,helpmessage="Side one of triangle")]
+        $a, 
+        [parameter(mandatory=$true,helpmessage="Side two of triangle")]
+        $b
+        )
+    if ([string]::IsNullOrEmpty($a)) {
+        while ([string]::IsNullOrEmpty($a)) {
+            $a=read-host -Prompt "Enter a value for Side1"
+        }
+    }
+    if ([string]::IsNullOrEmpty($b)) {
+        while ([string]::IsNullOrEmpty($b)) {
+            $b=read-host -Prompt "Enter a value for Side2"
+        }
+    }
+    $c2= ([math]::Pow($a,2)) + ([math]::Pow($b,2))
+    [math]::Sqrt($c2)
+}
+#>
+
+# Create a function that takes two (2) values, '$a' and '$b', as two (2) angles in degrees of a triangle.
+# Return the value of the missing angle
+
+<#
+function get-angle($a,$b){
+    $angle = 180 - ($a + $b)
+    Write-Host $angle
+}
+#>
+
+# -OR-
+# Validates this is a real triangle
+<#
+function Find-Angle ($ang1,$ang2) {
+    $ang3= 180 - ($ang1 + $ang2)
+    if ($ang3 -gt 0 -AND $ang3 -lt 180) {
+       write-host "Missing angle is $ang3 degrees" 
+       }
+       Else {
+       Write-Host "This is not a real triangle"
+       }
+}
+
+Find-Angle 30 90
+#>
+
+# Create a function that takes the following as mandatory parameters:
+#  -First Name
+#  -Last Name
+#  -Age
+#  -Weight in pounds (lbs)
+# Return the information in a hash table using the keys: 'first', 'last', 'age', and 'weight'. 
+#  -The weight value returned shall be converted to kilograms (kg) and rounded to the nearest whole number
+
+<#
+function Display-PersInfo {
+   param (
+        [Parameter(Mandatory=$True, Position=0, HelpMessage="Type in your First Name")]
+            [string]$Fname,
+        [Parameter(Mandatory=$True, Position=1, HelpMessage="Type in your Last Name")]
+            [string]$Lname,
+        [Parameter(Mandatory=$True, Position=2, HelpMessage="Type in your Age")]
+            [ValidateRange(0,120)]
+            [int]$Age,
+        [Parameter(Mandatory=$True, Position=3, HelpMessage="Type in your Weight in lbs")]
+            [ValidateRange(0,750)]
+            [int]$Weight
+         )
+    $KgWeight=[math]::Round($Weight / 2.2)
+    $Display= [ordered]@{Fname="$Fname"; Lname="$Lname"; Age="$Age"; Weight="$KgWeight kgs"}
+    Write-Output $Display
+}
+#>
+
+_____________________________________________________________________________________________________________________________________________________________
 
 
+# Activity #10: Creating Functions
+
+# Write a function that returns the Ordinal date of the current date
+# Example:
+#         PS> Get-OrdinalDate
+#         2022-36
+
+<#
+function Retrieve-OrdinalDate {
+    $day=(get-date).DayOfYear
+    $year=(get-date).Year
+    write-host "$year-$day"
+}
+Retrieve-OrdinalDate
+#>
+
+# Create a function that takes a number(n) as an argument and returns the square(n^2) of the number 
+# Example:
+#         PS> Get-SquareNum 10
+#         100
+
+<#
+function Number-Squared([int]$Number) {
+    $Number * $Number
+    
+}
+Number-Squared 6
+#>
+
+# -OR-
+# Using .Net Casting
+<#
+function Number-Squared([int]$Number) {
+    [math]::Pow($number,2)
+}
+Number-Squared 9
+#>
+
+# Create a function that takes three (3) arguments and returns the product of the arguments
+# Example:
+#         PS> Get-Product 5 5 5
+#         125
+
+<#
+function Find-Product($Number1,$Number2,$Number3) {
+    $Product= $Number1 * $Number2 * $Number3
+    Write-Host $Product
+}
+Find-Product 2 4 6
+#>
+
+_________________________________________________________________________________________________________________________________________________________________
 
 
-create an advanced function using Begin, Process, End, that prompts the user to enter the names of three(3) U.S.
- States then returns the names of the states in the order of longest name to shortest name and the amount of
-  characters in each name.
-PS> Get-LongestName
-Georgia: 7
-Idaho: 5
-Utah: 4
+# Activity #09: Looping & Iteration
+
+# Part 1
+# Use an array to iterate and open the following:
+#  -Notepad
+#  -MS Edge
+#  -MSPaint
+# Query the Processes
+# Kill the Processes
+
+<#
+# Array to start
+$processes= "notepad", "msedge", "mspaint"
+$processes | ForEach-Object {Start-Process $PSItem }
+
+Query the Processes
+#get-process $processes
+
+# Stopping the Processes
+$processes | % {Stop-Process -Name $_ }
+#>
+
+# Part 2
+# Use an array to iterate and open the following:
+#  -Notepad
+#  -MS Edge
+#  -MSPaint
+# Query the Processes
+# Save the ProcessIDs to a text file called 'procs.txt'
+# Iterate through the process ids in the text file and kill them
+
+<#
+$processes= "notepad", "msedge", "mspaint"
+$PIDs= "$env:HOMEPATH\Desktop\procs.txt"
+$processes | ForEach-Object {Start-Process $PSItem }
+
+sleep 1
+
+ForEach ($process in $processes) {
+    Get-Process | Where-Object { $PSItem.Name -like $process } |
+    ForEach-Object { Add-Content $PIDs $_.Id} 
+    }
+sleep 1
+
+Get-Content $PIDs | % {Stop-Process -Id $_ -ErrorAction SilentlyContinue }
+
+sleep 1
+
+remove-item $pids
+#>
 
 
+# Part 3
+# Use an array to iterate and open the following:
+#  -Notepad
+#  -MS Edge
+#  -MSPaint
+# Query the Processes and display only the information in order by Process ID:
+#  -Process ID
+#  -Process Name
+#  -Time the process started
+#  -The amount of time the process has spent on the processor
+#  -The amount of memory assigned to the process
+
+<#
+$processes= "notepad", "msedge", "mspaint"
+$processes | ForEach-Object {Start-Process $PSItem }
+
+ForEach ($process in $processes) {
+    Get-Process | Where-Object { $PSItem.Name -like $process } |Format-Table -Property ID, Name, StartTime, TotalProcessorTime, WorkingSet64
+    }
+#>
+
+___________________________________________________________________________________________________________________________________________________
+
+# Activity #08: Comparisons and Conditions
+
+# Find and extract the model number from the provided lines of text. If there isn't a model number, then display to the user that a
+# model number was't found.
+# Ensure to check both lines for the model number and report individually both the line and model number if found
+#
+# Use the following variables for your script:
+
+$line1="Do you have model number: MO5437 for john.doe@sharklasers.com?"     
+$line2="What model number for john.doe@sharklasers.com?"
+
+# If/Else : Matches the Lines and spits model/no model
+<#
+$line1,$line2 | ForEach-Object { 
+    if ($PSItem -match '[A-Z]{2}[0-9]{4}') { 
+        Write-Host 'Model #'$Matches.Values
+        } 
+    else {
+        Write-Host "Model Number Not Found"
+        }
+    }
+#>
+
+# -OR-
+# If/Else : Matches the Model Number and spits both line number and model/no model
+<# 
+$line1,$line2 | ForEach-Object -Begin {$x=1 } -Process { 
+    if ($PSItem -match '[A-Z]{2}[0-9]{4}') { 
+        Write-Host -nonewline Line$x ; Write-Host ': Model #'$Matches.Values
+        } 
+    else {
+        Write-Host -nonewline Line$x ; Write-Host ": Model Number Not Found"
+        }
+    $x++
+    }
+#>
+
+# -OR-
+# Switch :  Matches the Model Number and spits both line number and model/no model
+<#
+$regex = '[A-Z]{2}[0-9]{4}'
+switch -Regex ($regex) {
+    { $line1  } {
+        if ($line1 -match $regex) {
+            Write-Host "Line1: Model #"$Matches[0]
+        }
+        else {
+             Write-Host "Line1: Model Number Not Found"
+        }
+    }
+    { $line2 } {
+        if ($line2 -match $regex) {
+            Write-Host "Line2: Model #"$Matches[0]
+        }
+        else {
+             Write-Host "Line2: Model Number Not Found"
+        }
+    }
+}
+#>
+        _________________________________________________________________________________________________________________________________________________
+        
+        
+        # Activity #07: Custom Objects
+
+# Create a custom object that contains information about the host system using the following:
+#  - Win32_ComputerSystem
+#  - Win32_BIOS
+#  - Win32_OperatingSystem
+#  - Win32_LogicalDisk
+# Use 'Get-WmiObject' or 'Get-CimInstance' to obtain the information
+# 
+# Output should look like the following:
+#    Computername     :  Computer
+#    OperatingSystem  :  Microsoft Server 2019
+#    Version          :  10.0.23456
+#    Manufacturer     :  Oracle
+#    Disks            :  \\Computer\root\cimv2:Win32_LogicalDisk.DeviceID="A" , 
+#                        \\Computer\root\cimv2:Win32_LogicalDisk.DeviceID="Z"
+
+<#
+$compinfo= Get-WmiObject Win32_ComputerSystem
+$BIOSinfo= Get-WmiObject Win32_BIOS
+$OSinfo= Get-WmiObject Win32_OperatingSystem
+$Diskinfo= Get-WmiObject Win32_LogicalDisk
+$SysInfo= New-object -TypeName psobject
+
+$SysInfo | Add-Member -MemberType NoteProperty -Name Computername -Value $compinfo.Name
+# -utilized : #compinfo | get-member
+$SysInfo | Add-Member -MemberType NoteProperty -Name OperatingSystem -Value $OSinfo.Caption
+# -utilized: $OSinfo | FL *
+# -^^ same as $OSinfo | Format-List -Properties *
+$SysInfo | Add-Member -MemberType NoteProperty -Name Version -Value $OSinfo.Version
+$SysInfo | Add-Member -MemberType NoteProperty -Name Manufacturer -Value $BIOSinfo.Manufacturer
+$SysInfo | Add-Member -MemberType NoteProperty -Name Disks -Value $Diskinfo.Path
+$Sysinfo
+#>
 
 
+_________________________________________________________________________________________________________
+
+# Activity #06: Pipeline
+
+# Display the start time of the earliest and latest running processes
+
+<#
+Get-Process | Measure-Object -Property StartTime -Minimum -Maximum | Select-Object -Property Minimum, Maximum
+#>
+
+# -OR-
+# Using Where-Object
+<#
+Get-Process | Where-Object {$_.StartTime} | Measure-Object -Property StartTime -Minimum -Maximum | Select-Object -Property Minimum, Maximum
+#>
+
+# Identify a cmdlet that returns the current date and time. Then using the same cmdlet and 'Select-object', display only the 
+# current day of the week
+
+<#
+Get-Date
+Get-Date | get-member
+# get-member displays all the properties and methods of a command
+
+Get-Date | Select-Object DayofWeek
+#>
+
+# Identify a cmdlet that displays a list of installed hotfixes
+
+<#
+Get-Hotfix
+#>
+
+# Extend the expression to sort the list by installation date, and display only the installation date and hotfix id
+
+<#
+Get-HotFix | Sort-Object -Property Installdate | Select-Object InstalledOn, HotFixID
+#>
+
+# Extend the expression further, but this time sort by description. Have it output only the description, hotfix id and installation date
+
+<#
+Get-HotFix | Sort-Object -Property Description | Select-Object InstalledOn, HotFixID, Description
+#>
+
+___________________________________________________________________________________________________________________________________________
+
+# Activity #05: Hash Tables
+
+# Create two empty hash tables with the following names:
+#  -employee1
+#  -employee2
+
+<#
+#Creating the emtpy hash table of employee1
+$employee1 = [ordered]@{}
+
+## '[ordered]' keeps the hash table key-values in the same order as they are defined
+## when the hash table is declared/as more key-values are added
+
+# Adding the keys and values for employee1
+$employee1.First = "Mary"
+$employee1["Last"] = "Hopper"
+$employee1.ID = "001"
+$employee1["Job"] = "Software Developer"
+
+# Add keys and values for employee2
+
+$employee2 = [ordered]@{ First = "John" ; Last = "Williams" ; ID = "002" ; Job = "Web Developer" }
+#>
+
+# Now add a new key called Username which holds a contraction of the employee’s 
+# first initial then last name then ID. (i.e. mhopper001).
+
+<#
+$employee1.Username = "mhopper001"
+$employee2["Username"] = "jwilliams002"
+#>
+
+# Mary got promoted to "Software Lead" so the job key for Mary needs to be 
+# changed to "Software Lead"
+
+<#
+$employee1.Job = "Software Lead"
+#>
+
+# Create a new hash table called "employee3" that contains the following values
+# with the respective keys.
+
+<#
+# Create employee3 
+$employee3 = [ordered]@{}
+
+# Add keys and values for employee3
+$employee3.First = "Alex"
+$employee3["Last"] = "Moran"
+$employee3.add("ID","003")
+$employee3.Username = "amoran003"
+$employee3["Job"] = "Software Developer"
+#>
+
+# Add a new key called "Status" that holds the values:
+
+<#
+$employee1.Status = "Management"
+$employee2["Status"] = "Intermediate"
+$employee3.Status = "Entry Level"
+#>
