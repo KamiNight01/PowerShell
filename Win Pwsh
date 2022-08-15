@@ -1,0 +1,12 @@
+windows powershell remoting.
+
+since it's so trusted you need multiple dependency to be turned on before it can be run 
+including WInRm as well as Wsman
+
+invoke cammand is used to run a command remotely on a remote box. it runs it in that particular iteration/connection.
+
+system32> Invoke-Command -ComputerName workstation3,server4,webserver5 C:\Windows\\findevil.ps1
+
+
+
+new -pssession  -computername
